@@ -331,4 +331,53 @@ function CalculatorScreen() {
 }
 
 const TABS = [
-  { key: "home", label: "Accueil", icon: HomeIcon, 
+  { key: "home", label: "Accueil", icon: HomeIcon, screen: HomeScreen },
+  { key: "rapport", label: "Rapport", icon: FileIcon, screen: RapportScreen },
+  { key: "quartiers", label: "Quartiers", icon: MapIcon, screen: QuartiersScreen },
+  { key: "annuaire", label: "Annuaire", icon: UsersIcon, screen: AnnuaireScreen },
+  { key: "plus", label: "Plus", icon: MoreIcon, screen: PlusScreen },
+];
+const TITLES = { home: "Accueil", rapport: "Rapport Trimestriel", quartiers: "Prix par quartier", annuaire: "Professionnels", plus: "Plus" };
+
+function App() {
+  const [tab, setTab] = useState("home");
+  const [showCalc, setShowCalc] = useState(false);
+  const Active = TABS.find((t) => t.key === tab).screen;
+
+  if (showCalc) {
+    return h("div", { style: { fontFamily: BODY, background: PAPER, minHeight: "100%", display: "flex", flexDirection: "column" } },
+      h(TopBar, { title: "Calculateur de prêt", onBack: () => setShowCalc(false) }),
+      h("div", { style: { flex: 1, overflowY: "auto", paddingBottom: "24px" } }, h(CalculatorScreen))
+    );
+  }
+
+  return h("div", { style: { fontFamily: BODY, background: PAPER, minHeight: "100%", display: "flex", flexDirection: "column" } },
+    h(TopBar, { title: TITLES[tab] }),
+    h("div", { style: { flex: 1, overflowY: "auto", paddingBottom: "70px" } }, h(Active, { openCalc: () => setShowCalc(true) })),
+    h("div", {
+      style: { position: "fixed", bottom: 0, left: 0, right: 0, background: "#fff", borderTop: `1px solid ${PAPER_DEEP}`, display: "flex", paddingBottom: "env(safe-area-inset-bottom)" },
+    },
+      TABS.map(({ key, label, icon: IconComp }) => {
+        const active = tab === key;
+        return h("button", {
+          key: key, onClick: () => setTab(key),
+          style: { flex: 1, background: "none", border: "none", padding: "9px 4px 8px", display: "flex", flexDirection: "column", alignItems: "center", gap: "3px", cursor: "pointer" },
+        },
+          h(IconComp, { size: 21, color: active ? BRONZE : INK_SOFT, strokeWidth: active ? 2.1 : 1.7 }),
+          h("span", { style: { fontSize: "10px", color: active ? BRONZE : INK_SOFT, fontWeight: active ? 700 : 400 } }, label)
+        );
+      })
+    )
+  );
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(h(App));
+
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("sw.js").catch(() => {});
+  });
+}
+</script>
+</body>
+</html>
