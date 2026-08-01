@@ -133,199 +133,337 @@
 
     function HomeScreen({ openCalc }) {
       return (
-        <div style={{ padding: "18px" }}>
-          <div style={{ fontFamily: DISPLAY, fontSize: "24px", color: INK, marginBottom: "6px", lineHeight: 1.2 }}>Le marché immobilier malien, enfin mesuré.</div>
-          <div style={{ fontSize: "13.5px", color: INK_SOFT, marginBottom: "20px", lineHeight: 1.5 }}>Rapports trimestriels indépendants, données vérifiées, aucune agence favorisée.</div>
-          <Card style={{ display: "flex", justifyContent: "space-around", marginBottom: "16px" }}>
-            <Stat label="Quartiers suivis" value="24" />
-            <Stat label="Publication" value="Trimestrielle" />
-            <Stat label="Sources" value="INSTAT-BCEAO" />
-          </Card>
-          <div style={{ display: "grid", gap: "10px" }}>
-            <PrimaryButton icon={DownloadIcon}>Dernier rapport trimestriel</PrimaryButton>
-            <Card onClick={openCalc} style={{ display: "flex", alignItems: "center", gap: "12px", background: PAPER_DEEP, border: "none" }}>
-              <CalcIcon size={20} color={INK} />
-              <div style={{ fontFamily: DISPLAY, fontSize: "14.5px", color: INK }}>Calculateur de prêt immobilier</div>
-              <ChevronIcon size={16} color={INK_SOFT} style={{ marginLeft: "auto" }} />
-            </Card>
-          </div>
-        </div>
-      );
-    }
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<title>Terrimoine</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<meta name="theme-color" content="#3E2723" />
+<link rel="manifest" href="manifest.json" />
+<link rel="apple-touch-icon" href="icons/icon-192.png" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+<style>
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { margin: 0; height: 100%; overscroll-behavior-y: none; }
+  #root { height: 100%; }
+  ::-webkit-scrollbar { display: none; }
+  input[type=range] { -webkit-appearance: none; appearance: none; height: 4px; border-radius: 2px; background: #E6DBC3; }
+  input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 20px; height: 20px; border-radius: 50%; background: #A67C3D; cursor: pointer; }
+</style>
+</head>
+<body>
+<div id="root">
+  <div style="font-family: Arial, sans-serif; padding: 40px 20px; text-align: center; color: #6B5B4D;">
+    <div style="font-size: 15px;">Chargement…</div>
+    <div style="font-size: 12.5px; margin-top: 10px;">Connexion lente ? Ce chargement est volontairement léger — patientez quelques secondes.</div>
+  </div>
+</div>
 
-    function RapportScreen() {
-      return (
-        <div style={{ padding: "18px" }}>
-          <Card style={{ background: INK, color: PAPER, borderRadius: "10px", padding: "22px", marginBottom: "18px" }}>
-            <div style={{ fontFamily: MONO, fontSize: "10px", letterSpacing: "2px", color: BRONZE, marginBottom: "8px" }}>ÉDITION Q1 2026</div>
-            <div style={{ fontFamily: DISPLAY, fontSize: "19px", lineHeight: 1.3 }}>Rapport Trimestriel du Marché Immobilier de Bamako</div>
-          </Card>
-          <PrimaryButton icon={DownloadIcon}>Télécharger gratuitement</PrimaryButton>
-        </div>
-      );
-    }
+<script>
+setTimeout(function () {
+  if (typeof React === "undefined" || typeof ReactDOM === "undefined") {
+    var r = document.getElementById("root");
+    if (r) r.innerHTML = '<div style="font-family: Arial, sans-serif; padding: 40px 20px; text-align: center; color: #1F2A2C;">'
+      + '<div style="font-size: 15px; font-weight: 600; margin-bottom: 10px;">La page n\'a pas pu charger.</div>'
+      + '<div style="font-size: 13px; color: #6B5B4D;">Vérifiez votre connexion internet et rechargez la page. Si le problème persiste, contactez Terrimoine sur WhatsApp +223 82 68 35 41.</div>'
+      + '</div>';
+  }
+}, 8000);
+</script>
 
-    function QuartiersScreen() {
-      return (
-        <div style={{ padding: "18px" }}>
-          <div style={{ fontSize: "13px", color: INK_SOFT, marginBottom: "18px", lineHeight: 1.5 }}>Suivi trimestre après trimestre à partir des annonces et du réseau terrain.</div>
-          {ZONES.map((zone) => (
-            <div key={zone.name} style={{ marginBottom: "18px" }}>
-              <div style={{ fontFamily: MONO, fontSize: "11px", letterSpacing: "1px", color: BRONZE, marginBottom: "8px", textTransform: "uppercase" }}>{zone.name}</div>
-              {zone.quartiers.map((q) => (
-                <Card key={q.nom} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "8px" }}>
-                  <div style={{ fontFamily: DISPLAY, fontSize: "15px" }}>{q.nom}</div>
-                  <div style={{ textAlign: "right" }}>
-                    <div style={{ fontFamily: MONO, fontSize: "14px", color: q.val ? BRONZE : INK_SOFT }}>{q.val || "—"}</div>
-                    <div style={{ fontSize: "10px", color: INK_SOFT }}>{q.note}</div>
-                  </div>
-                </Card>
-              ))}
-            </div>
-          ))}
-        </div>
-      );
-    }
+<script>
+const h = React.createElement;
+const { useState, useMemo } = React;
 
-    function AnnuaireScreen() {
-      return (
-        <div style={{ padding: "18px" }}>
-          <div style={{ fontSize: "13px", color: INK_SOFT, marginBottom: "18px", lineHeight: 1.5 }}>Un répertoire ouvert, pas un classement payant.</div>
-          <div style={{ display: "grid", gap: "10px" }}>
-            {PROS.map(({ icon: IconComp, label, note }) => (
-              <Card key={label} style={{ display: "flex", alignItems: "center", gap: "14px" }}>
-                <IconComp size={24} color={BRONZE} strokeWidth={1.5} />
-                <div>
-                  <div style={{ fontFamily: DISPLAY, fontSize: "15px" }}>{label}</div>
-                  <div style={{ fontSize: "12px", color: INK_SOFT }}>{note}</div>
-                </div>
-              </Card>
-            ))}
-          </div>
-        </div>
-      );
-    }
+const INK = "#3E2723";
+const BRONZE = "#A67C3D";
+const PAPER = "#F1EAD9";
+const PAPER_DEEP = "#E6DBC3";
+const INK_SOFT = "#6B5B4D";
+const DISPLAY = "'Zilla Slab', 'Roboto Slab', Georgia, serif";
+const BODY = "'IBM Plex Sans', 'Segoe UI', Arial, sans-serif";
+const MONO = "'IBM Plex Mono', 'Courier New', monospace";
 
-    function PlusScreen({ openCalc }) {
-      return (
-        <div style={{ padding: "18px" }}>
-          <Card onClick={openCalc} style={{ marginBottom: "14px", display: "flex", alignItems: "center", gap: "14px" }}>
-            <CalcIcon size={22} color={BRONZE} />
-            <div style={{ flex: 1 }}>
-              <div style={{ fontFamily: DISPLAY, fontSize: "16px" }}>Calculateur de prêt</div>
-              <div style={{ fontSize: "12px", color: INK_SOFT }}>Mensualité, coût total, intérêts</div>
-            </div>
-            <ChevronIcon size={16} color={INK_SOFT} />
-          </Card>
-          <Card style={{ marginBottom: "14px" }}>
-            <GlobeIcon size={22} color={BRONZE} />
-            <div style={{ fontFamily: DISPLAY, fontSize: "16px", margin: "10px 0 6px" }}>Diaspora</div>
-            <div style={{ fontSize: "13px", color: INK_SOFT, lineHeight: 1.5 }}>Donner à la diaspora la même information que quelqu'un sur place.</div>
-          </Card>
-        </div>
-      );
-    }
+function Icon({ children, size = 22, color = "currentColor", strokeWidth = 1.8 }) {
+  return h("svg", { width: size, height: size, viewBox: "0 0 24 24", fill: "none", stroke: color,
+    strokeWidth: strokeWidth, strokeLinecap: "round", strokeLinejoin: "round" }, children);
+}
+const HomeIcon = (p) => h(Icon, p, h("path", { d: "M4 11.5L12 4l8 7.5" }), h("path", { d: "M6 10v10h12V10" }));
+const FileIcon = (p) => h(Icon, p, h("path", { d: "M6 2h9l5 5v15H6z" }), h("line", { x1: "9", y1: "12", x2: "17", y2: "12" }), h("line", { x1: "9", y1: "16", x2: "17", y2: "16" }));
+const MapIcon = (p) => h(Icon, p, h("path", { d: "M12 21s-7-6.5-7-11a7 7 0 0 1 14 0c0 4.5-7 11-7 11z" }), h("circle", { cx: "12", cy: "10", r: "2.5" }));
+const UsersIcon = (p) => h(Icon, p, h("circle", { cx: "9", cy: "8", r: "3.2" }), h("path", { d: "M3 20c0-3.5 2.7-6 6-6s6 2.5 6 6" }), h("circle", { cx: "17", cy: "9", r: "2.6" }), h("path", { d: "M15.5 14c2.7.3 4.5 2.4 4.5 6" }));
+const MoreIcon = (p) => h(Icon, p, h("circle", { cx: "5", cy: "12", r: "1.4", fill: "currentColor" }), h("circle", { cx: "12", cy: "12", r: "1.4", fill: "currentColor" }), h("circle", { cx: "19", cy: "12", r: "1.4", fill: "currentColor" }));
+const GlobeIcon = (p) => h(Icon, p, h("circle", { cx: "12", cy: "12", r: "9" }), h("ellipse", { cx: "12", cy: "12", rx: "4", ry: "9" }), h("line", { x1: "3", y1: "12", x2: "21", y2: "12" }));
+const ShieldIcon = (p) => h(Icon, p, h("path", { d: "M12 2l8 3.5v6C20 17 16.5 20.5 12 22c-4.5-1.5-8-5-8-10.5v-6z" }), h("polyline", { points: "8.5 12 11 14.5 15.5 9.5" }));
+const DownloadIcon = (p) => h(Icon, p, h("path", { d: "M12 3v12" }), h("polyline", { points: "7 11 12 16 17 11" }), h("path", { d: "M5 19h14" }));
+const ChevronIcon = (p) => h(Icon, p, h("polyline", { points: "9 6 15 12 9 18" }));
+const CalcIcon = (p) => h(Icon, p,
+  h("rect", { x: "4", y: "2", width: "16", height: "20", rx: "2" }),
+  h("line", { x1: "8", y1: "6", x2: "16", y2: "6" }),
+  h("line", { x1: "8", y1: "11", x2: "8", y2: "11.01" }), h("line", { x1: "12", y1: "11", x2: "12", y2: "11.01" }), h("line", { x1: "16", y1: "11", x2: "16", y2: "11.01" }),
+  h("line", { x1: "8", y1: "15", x2: "8", y2: "15.01" }), h("line", { x1: "12", y1: "15", x2: "12", y2: "15.01" }), h("line", { x1: "16", y1: "15", x2: "16", y2: "15.01" })
+);
+const BackIcon = (p) => h(Icon, p, h("polyline", { points: "15 18 9 12 15 6" }));
 
-    function Slider({ label, value, onChange, min, max, step, suffix }) {
-      return (
-        <div style={{ marginBottom: "20px" }}>
-          <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "8px" }}>
-            <span style={{ fontSize: "13px", color: INK_SOFT }}>{label}</span>
-            <span style={{ fontFamily: MONO, fontSize: "14px", color: INK, fontWeight: 700 }}>{value}{suffix}</span>
-          </div>
-          <input type="range" min={min} max={max} step={step} value={value} onChange={(e) => onChange(Number(e.target.value))} style={{ width: "100%" }} />
-        </div>
-      );
-    }
+const ZONES = [
+  { name: "Centre / résidentiel prime", quartiers: [
+    { nom: "ACI 2000", val: "380 000", note: "loyer moyen FCFA/mois" },
+    { nom: "Badalabougou", val: "650 000", note: "loyer moyen FCFA/mois" },
+    { nom: "Hamdallaye ACI", val: null, note: "collecte en cours" },
+    { nom: "Niaréla", val: null, note: "collecte en cours" },
+  ]},
+  { name: "Résidentiel établi", quartiers: [
+    { nom: "Sotuba", val: "300 000", note: "prix médian FCFA/m² (vente)" },
+    { nom: "Sébénikoro", val: null, note: "collecte en cours" },
+    { nom: "Djicoroni Para", val: null, note: "collecte en cours" },
+  ]},
+  { name: "Extension / périphérie", quartiers: [
+    { nom: "Yirimadio", val: "210 000", note: "prix médian FCFA/m² (vente)" },
+    { nom: "Faladié", val: "130 000", note: "loyer moyen FCFA/mois" },
+    { nom: "Kalaban Coura", val: null, note: "collecte en cours" },
+  ]},
+];
 
-    function CalculatorScreen() {
-      const [montant, setMontant] = useState(20000000);
-      const [taux, setTaux] = useState(9);
-      const [duree, setDuree] = useState(10);
+const REPORT_SECTIONS = [
+  "Synthèse exécutive", "Contexte macro-économique", "Marché résidentiel de Bamako",
+  "Foncier & actualité réglementaire", "Diaspora & investissement", "Perspectives", "Méthodologie & sources",
+];
 
-      const { mensualite, coutTotal, interets } = useMemo(() => {
-        const r = taux / 100 / 12;
-        const n = duree * 12;
-        const m = r === 0 ? montant / n : (montant * r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1);
-        const total = m * n;
-        return { mensualite: m, coutTotal: total, interets: total - montant };
-      }, [montant, taux, duree]);
+const PROS = [
+  { icon: UsersIcon, label: "Agences immobilières", note: "annuaire ouvert, sans classement payant" },
+  { icon: ShieldIcon, label: "Notaires", note: "vérification des actes" },
+  { icon: MapIcon, label: "Géomètres agréés", note: "bornage & délimitation" },
+  { icon: FileIcon, label: "Agents des Domaines", note: "titres & cadastre" },
+];
 
-      return (
-        <div style={{ padding: "18px" }}>
-          <Card style={{ marginBottom: "20px" }}>
-            <Slider label="Montant du prêt" value={fmt(montant)} onChange={setMontant} min={1000000} max={150000000} step={500000} suffix=" FCFA" />
-            <Slider label="Taux d'intérêt annuel" value={taux} onChange={setTaux} min={4} max={15} step={0.1} suffix=" %" />
-            <Slider label="Durée du prêt" value={duree} onChange={setDuree} min={1} max={25} step={1} suffix=" ans" />
-          </Card>
-          <div style={{ background: INK, color: PAPER, borderRadius: "10px", padding: "22px", textAlign: "center", marginBottom: "16px" }}>
-            <div style={{ fontFamily: MONO, fontSize: "11px", letterSpacing: "1.5px", color: BRONZE, marginBottom: "8px" }}>MENSUALITÉ ESTIMÉE</div>
-            <div style={{ fontFamily: DISPLAY, fontSize: "32px" }}>{fmt(mensualite)} FCFA</div>
-            <div style={{ fontSize: "12px", color: "rgba(241,234,217,0.7)", marginTop: "4px" }}>par mois</div>
-          </div>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px" }}>
-            <Card style={{ textAlign: "center" }}>
-              <div style={{ fontFamily: MONO, fontSize: "16px", color: BRONZE, fontWeight: 700 }}>{fmt(coutTotal)}</div>
-              <div style={{ fontSize: "11px", color: INK_SOFT, marginTop: "4px" }}>Coût total (FCFA)</div>
-            </Card>
-            <Card style={{ textAlign: "center" }}>
-              <div style={{ fontFamily: MONO, fontSize: "16px", color: BRONZE, fontWeight: 700 }}>{fmt(interets)}</div>
-              <div style={{ fontSize: "11px", color: INK_SOFT, marginTop: "4px" }}>Intérêts payés (FCFA)</div>
-            </Card>
-          </div>
-        </div>
-      );
-    }
+function LogoMark({ size = 30 }) {
+  return h("svg", { width: size, height: size, viewBox: "0 0 120 120", style: { flexShrink: 0 } },
+    h("rect", { x: 22, y: 76, width: 76, height: 13, rx: 2, fill: PAPER }),
+    h("rect", { x: 22, y: 57, width: 54, height: 13, rx: 2, fill: BRONZE }),
+    h("rect", { x: 22, y: 38, width: 32, height: 13, rx: 2, fill: PAPER })
+  );
+}
 
-    const TABS = [
-      { key: "home", label: "Accueil", icon: HomeIcon, screen: HomeScreen },
-      { key: "rapport", label: "Rapport", icon: FileIcon, screen: RapportScreen },
-      { key: "quartiers", label: "Quartiers", icon: MapIcon, screen: QuartiersScreen },
-      { key: "annuaire", label: "Annuaire", icon: UsersIcon, screen: AnnuaireScreen },
-      { key: "plus", label: "Plus", icon: MoreIcon, screen: PlusScreen },
-    ];
+function TopBar({ title, onBack }) {
+  return h("div", {
+    style: { background: INK, color: PAPER, padding: "16px 20px 14px", position: "sticky", top: 0, zIndex: 10, borderBottom: `1px solid ${BRONZE}`, display: "flex", alignItems: "center", gap: "12px" },
+  },
+    onBack && h("button", { onClick: onBack, style: { background: "none", border: "none", padding: 0, cursor: "pointer", color: PAPER } }, h(BackIcon, { size: 20 })),
+    !onBack && h(LogoMark, { size: 30 }),
+    h("div", null,
+      h("div", { style: { fontFamily: MONO, fontSize: "10px", letterSpacing: "2px", color: BRONZE, marginBottom: "2px" } }, "TERRIMOINE"),
+      h("div", { style: { fontFamily: DISPLAY, fontSize: "21px" } }, title)
+    )
+  );
+}
 
-    const TITLES = { home: "Accueil", rapport: "Rapport Trimestriel", quartiers: "Prix par quartier", annuaire: "Professionnels", plus: "Plus" };
+function Card({ children, style, onClick }) {
+  return h("div", {
+    onClick: onClick,
+    style: { background: "#fff", border: `1px solid ${PAPER_DEEP}`, borderRadius: "10px", padding: "16px", cursor: onClick ? "pointer" : "default", ...style },
+  }, children);
+}
 
-    function App() {
-      const [tab, setTab] = useState("home");
-      const [showCalc, setShowCalc] = useState(false);
-      const Active = TABS.find((t) => t.key === tab).screen;
+function Stat({ label, value }) {
+  return h("div", { style: { textAlign: "center" } },
+    h("div", { style: { fontFamily: MONO, fontSize: "20px", color: BRONZE, fontWeight: 700 } }, value),
+    h("div", { style: { fontSize: "10.5px", color: INK_SOFT, marginTop: "2px" } }, label)
+  );
+}
 
-      if (showCalc) {
-        return (
-          <div style={{ fontFamily: BODY, background: PAPER, minHeight: "100%", display: "flex", flexDirection: "column" }}>
-            <TopBar title="Calculateur de prêt" onBack={() => setShowCalc(false)} />
-            <div style={{ flex: 1, overflowY: "auto", paddingBottom: "24px" }}>
-              <CalculatorScreen />
-            </div>
-          </div>
-        );
-      }
+function PrimaryButton({ children, icon: IconComp, onClick }) {
+  return h("button", {
+    onClick: onClick,
+    style: { width: "100%", fontFamily: BODY, fontSize: "15px", fontWeight: 600, background: BRONZE, color: INK, border: "none", borderRadius: "10px", padding: "15px", display: "flex", alignItems: "center", justifyContent: "center", gap: "8px", cursor: "pointer" },
+  }, children, IconComp && h(IconComp, { size: 17 }));
+}
 
-      return (
-        <div style={{ fontFamily: BODY, background: PAPER, minHeight: "100%", display: "flex", flexDirection: "column" }}>
-          <TopBar title={TITLES[tab]} />
-          <div style={{ flex: 1, overflowY: "auto", paddingBottom: "70px" }}>
-            <Active openCalc={() => setShowCalc(true)} />
-          </div>
-          <div style={{ position: "fixed", bottom: 0, left: 0, right: 0, background: "#fff", borderTop: `1px solid ${PAPER_DEEP}`, display: "flex", paddingBottom: "env(safe-area-inset-bottom)" }}>
-            {TABS.map(({ key, label, icon: IconComp }) => {
-              const active = tab === key;
-              return (
-                <button key={key} onClick={() => setTab(key)} style={{ flex: 1, background: "none", border: "none", padding: "9px 4px 8px", display: "flex", flexDirection: "column", alignItems: "center", gap: "3px", cursor: "pointer" }}>
-                  <IconComp size={21} color={active ? BRONZE : INK_SOFT} strokeWidth={active ? 2.1 : 1.7} />
-                  <span style={{ fontSize: "10px", color: active ? BRONZE : INK_SOFT, fontWeight: active ? 700 : 400 }}>{label}</span>
-                </button>
-              );
-            })}
-          </div>
-        </div>
-      );
-    }
+function fmt(n) {
+  return Math.round(n).toLocaleString("fr-FR").replace(/,/g, " ").replace(/\u00A0/g, " ");
+}
 
-    const root = ReactDOM.createRoot(document.getElementById("root"));
-    root.render(<App />);
-  </script>
-</body>
-</html>
+function HomeScreen({ openCalc }) {
+  return h("div", { style: { padding: "18px" } },
+    h("div", { style: { fontFamily: DISPLAY, fontSize: "24px", color: INK, marginBottom: "6px", lineHeight: 1.2 } }, "Le marché immobilier malien, enfin mesuré."),
+    h("div", { style: { fontSize: "13.5px", color: INK_SOFT, marginBottom: "16px", lineHeight: 1.5 } }, "Rapports trimestriels indépendants, données vérifiées, aucune agence favorisée."),
+    h(Card, { style: { marginBottom: "16px", background: PAPER_DEEP, border: "none" } },
+      h("div", { style: { fontFamily: DISPLAY, fontSize: "14.5px", color: INK, marginBottom: "6px" } }, "Notre objectif"),
+      h("div", { style: { fontSize: "13px", color: INK_SOFT, lineHeight: 1.55 } }, "Au Mali, tout le monde parle d'immobilier, mais personne ne le mesure vraiment. Terrimoine donne à tous — agences, notaires, diaspora, investisseurs — les mêmes données vérifiées, chaque trimestre, sans jamais favoriser un acteur en particulier.")
+    ),
+    h(Card, { style: { display: "flex", justifyContent: "space-around", marginBottom: "16px" } },
+      h(Stat, { label: "Quartiers suivis", value: "24" }),
+      h(Stat, { label: "Publication", value: "Trimestrielle" }),
+      h(Stat, { label: "Sources", value: "INSTAT·BCEAO" })
+    ),
+    h("div", { style: { display: "grid", gap: "10px" } },
+      h(PrimaryButton, { icon: DownloadIcon }, "Dernier rapport trimestriel"),
+      h(Card, { onClick: openCalc, style: { display: "flex", alignItems: "center", gap: "12px", background: PAPER_DEEP, border: "none" } },
+        h(CalcIcon, { size: 20, color: INK }),
+        h("div", { style: { fontFamily: DISPLAY, fontSize: "14.5px", color: INK } }, "Calculateur de prêt immobilier"),
+        h(ChevronIcon, { size: 16, color: INK_SOFT, style: { marginLeft: "auto" } })
+      )
+    ),
+    h("div", { style: { marginTop: "22px", fontFamily: MONO, fontSize: "11px", letterSpacing: "1.5px", color: BRONZE, textTransform: "uppercase" } }, "Aperçu quartiers"),
+    h("div", { style: { display: "grid", gap: "10px", marginTop: "10px" } },
+      ZONES[0].quartiers.slice(0, 2).map((q) =>
+        h(Card, { key: q.nom, style: { display: "flex", justifyContent: "space-between", alignItems: "center" } },
+          h("div", { style: { fontFamily: DISPLAY, fontSize: "15px" } }, q.nom),
+          h("div", { style: { fontFamily: MONO, fontSize: "13px", color: q.val ? BRONZE : INK_SOFT, fontStyle: q.val ? "normal" : "italic" } }, q.val ? q.val + " F" : q.note)
+        )
+      )
+    ),
+    h(Card, { style: { marginTop: "18px", textAlign: "center" } },
+      h("div", { style: { fontFamily: DISPLAY, fontSize: "14.5px", color: INK, marginBottom: "6px" } }, "Une question ?"),
+      h("div", { style: { fontSize: "13px", color: INK_SOFT, lineHeight: 1.7 } },
+        "WhatsApp ", h("span", { style: { color: BRONZE, fontWeight: 700 } }, "+223 82 68 35 41"), h("br"),
+        "Hamdallaye, Rue 93, Porte 119, Bamako"
+      )
+    )
+  );
+}
+
+function RapportScreen() {
+  return h("div", { style: { padding: "18px" } },
+    h("div", { style: { fontSize: "13px", color: INK_SOFT, marginBottom: "16px", lineHeight: 1.5 } }, "Notre publication phare : chaque trimestre, un état des lieux complet et indépendant du marché immobilier malien, gratuit et téléchargeable."),
+    h("div", { style: { background: INK, color: PAPER, borderRadius: "10px", padding: "22px", marginBottom: "18px" } },
+      h("div", { style: { fontFamily: MONO, fontSize: "10px", letterSpacing: "2px", color: BRONZE, marginBottom: "8px" } }, "ÉDITION EN COURS"),
+      h("div", { style: { fontFamily: DISPLAY, fontSize: "19px", lineHeight: 1.3 } }, "Rapport Trimestriel du Marché Immobilier du Mali")
+    ),
+    h("div", { style: { display: "grid", gap: "8px", marginBottom: "20px" } },
+      REPORT_SECTIONS.map((s, i) =>
+        h("div", { key: s, style: { display: "flex", alignItems: "center", gap: "10px", fontSize: "14px", padding: "6px 0" } },
+          h("span", { style: { fontFamily: MONO, color: BRONZE, fontSize: "12px" } }, String(i + 1).padStart(2, "0")),
+          h("span", null, s)
+        )
+      )
+    ),
+    h(PrimaryButton, { icon: DownloadIcon }, "Télécharger gratuitement")
+  );
+}
+
+function QuartiersScreen() {
+  return h("div", { style: { padding: "18px" } },
+    h("div", { style: { fontSize: "13px", color: INK_SOFT, marginBottom: "18px", lineHeight: 1.5 } }, "Suivi trimestre après trimestre à partir des annonces et du réseau terrain."),
+    ZONES.map((zone) =>
+      h("div", { key: zone.name, style: { marginBottom: "18px" } },
+        h("div", { style: { fontFamily: MONO, fontSize: "11px", letterSpacing: "1px", color: BRONZE, marginBottom: "8px", textTransform: "uppercase" } }, zone.name),
+        h("div", { style: { display: "grid", gap: "8px" } },
+          zone.quartiers.map((q) =>
+            h(Card, { key: q.nom, style: { display: "flex", justifyContent: "space-between", alignItems: "center" } },
+              h("div", { style: { fontFamily: DISPLAY, fontSize: "15px" } }, q.nom),
+              h("div", { style: { textAlign: "right" } },
+                h("div", { style: { fontFamily: MONO, fontSize: "14px", color: q.val ? BRONZE : INK_SOFT, fontStyle: q.val ? "normal" : "italic", fontWeight: q.val ? 700 : 400 } }, q.val || "—"),
+                h("div", { style: { fontSize: "10px", color: INK_SOFT } }, q.note)
+              )
+            )
+          )
+        )
+      )
+    )
+  );
+}
+
+function AnnuaireScreen() {
+  return h("div", { style: { padding: "18px" } },
+    h("div", { style: { fontSize: "13px", color: INK_SOFT, marginBottom: "18px", lineHeight: 1.5 } }, "Un répertoire ouvert, pas un classement payant."),
+    h("div", { style: { display: "grid", gap: "10px" } },
+      PROS.map(({ icon: IconComp, label, note }) =>
+        h(Card, { key: label, style: { display: "flex", alignItems: "center", gap: "14px" } },
+          h(IconComp, { size: 24, color: BRONZE, strokeWidth: 1.5 }),
+          h("div", null,
+            h("div", { style: { fontFamily: DISPLAY, fontSize: "15px" } }, label),
+            h("div", { style: { fontSize: "12px", color: INK_SOFT } }, note)
+          )
+        )
+      )
+    ),
+    h("div", { style: { marginTop: "16px", fontSize: "12px", color: INK_SOFT, fontStyle: "italic", textAlign: "center" } }, "Annuaire en construction — rejoindre la première liste.")
+  );
+}
+
+function PlusScreen({ openCalc }) {
+  return h("div", { style: { padding: "18px" } },
+    h("div", { style: { fontSize: "13px", color: INK_SOFT, marginBottom: "16px", lineHeight: 1.5 } }, "Diaspora, méthodologie, calculateur et contact — tout ce qui complète le Rapport Trimestriel."),
+    h(Card, { onClick: openCalc, style: { marginBottom: "14px", display: "flex", alignItems: "center", gap: "14px" } },
+      h(CalcIcon, { size: 22, color: BRONZE }),
+      h("div", { style: { flex: 1 } },
+        h("div", { style: { fontFamily: DISPLAY, fontSize: "16px" } }, "Calculateur de prêt"),
+        h("div", { style: { fontSize: "12px", color: INK_SOFT } }, "Mensualité, coût total, intérêts")
+      ),
+      h(ChevronIcon, { size: 16, color: INK_SOFT })
+    ),
+    h(Card, { style: { marginBottom: "14px" } },
+      h(GlobeIcon, { size: 22, color: BRONZE }),
+      h("div", { style: { fontFamily: DISPLAY, fontSize: "16px", margin: "10px 0 6px" } }, "Diaspora"),
+      h("div", { style: { fontSize: "13px", color: INK_SOFT, lineHeight: 1.5 } }, "~700 milliards FCFA transférés vers le Mali en 2023. Terrimoine donne à la diaspora la même information que quelqu'un sur place.")
+    ),
+    h(Card, { style: { marginBottom: "14px" } },
+      h(ShieldIcon, { size: 22, color: BRONZE }),
+      h("div", { style: { fontFamily: DISPLAY, fontSize: "16px", margin: "10px 0 6px" } }, "Méthodologie"),
+      h("div", { style: { fontSize: "13px", color: INK_SOFT, lineHeight: 1.5 } }, "INSTAT, BCEAO, CAHF, prix de marché suivis, réseau terrain — chaque chiffre indique sa source.")
+    ),
+    h(Card, null,
+      h("div", { style: { fontFamily: DISPLAY, fontSize: "16px", marginBottom: "8px" } }, "Contact"),
+      h("div", { style: { fontSize: "13px", color: INK_SOFT, lineHeight: 1.9 } },
+        "Hamdallaye, Bamako, Mali — Rue 93, Porte 119", h("br"),
+        "WhatsApp +223 82 68 35 41", h("br"),
+        "terrimoine.com"
+      )
+    )
+  );
+}
+
+function Slider({ label, value, onChange, min, max, step, suffix }) {
+  return h("div", { style: { marginBottom: "20px" } },
+    h("div", { style: { display: "flex", justifyContent: "space-between", marginBottom: "8px" } },
+      h("span", { style: { fontSize: "13px", color: INK_SOFT } }, label),
+      h("span", { style: { fontFamily: MONO, fontSize: "14px", color: INK, fontWeight: 700 } }, value, suffix)
+    ),
+    h("input", { type: "range", min: min, max: max, step: step, value: value, onChange: (e) => onChange(Number(e.target.value)), style: { width: "100%" } })
+  );
+}
+
+function CalculatorScreen() {
+  const [montant, setMontant] = useState(20000000);
+  const [taux, setTaux] = useState(9);
+  const [duree, setDuree] = useState(10);
+
+  const { mensualite, coutTotal, interets } = useMemo(() => {
+    const r = taux / 100 / 12;
+    const n = duree * 12;
+    const m = r === 0 ? montant / n : (montant * r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1);
+    const total = m * n;
+    return { mensualite: m, coutTotal: total, interets: total - montant };
+  }, [montant, taux, duree]);
+
+  return h("div", { style: { padding: "18px" } },
+    h("div", { style: { fontSize: "13px", color: INK_SOFT, marginBottom: "22px", lineHeight: 1.5 } }, "Estimation indicative — les conditions réelles varient selon la banque. Taux immobilier moyen constaté au Mali : autour de 9% pour les particuliers (BCEAO, 2024)."),
+    h(Card, { style: { marginBottom: "20px" } },
+      h(Slider, { label: "Montant du prêt", value: montant, onChange: setMontant, min: 1000000, max: 150000000, step: 500000, suffix: " FCFA" }),
+      h(Slider, { label: "Taux d'intérêt annuel", value: taux, onChange: setTaux, min: 4, max: 15, step: 0.1, suffix: " %" }),
+      h(Slider, { label: "Durée du prêt", value: duree, onChange: setDuree, min: 1, max: 25, step: 1, suffix: " ans" })
+    ),
+    h("div", { style: { background: INK, color: PAPER, borderRadius: "10px", padding: "22px", textAlign: "center", marginBottom: "14px" } },
+      h("div", { style: { fontFamily: MONO, fontSize: "11px", letterSpacing: "1.5px", color: BRONZE, marginBottom: "8px" } }, "MENSUALITÉ ESTIMÉE"),
+      h("div", { style: { fontFamily: DISPLAY, fontSize: "32px" } }, fmt(mensualite) + " FCFA"),
+      h("div", { style: { fontSize: "12px", color: "rgba(241,234,217,0.7)", marginTop: "4px" } }, "par mois")
+    ),
+    h("div", { style: { display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px" } },
+      h(Card, { style: { textAlign: "center" } },
+        h("div", { style: { fontFamily: MONO, fontSize: "16px", color: BRONZE, fontWeight: 700 } }, fmt(coutTotal)),
+        h("div", { style: { fontSize: "11px", color: INK_SOFT, marginTop: "4px" } }, "Coût total (FCFA)")
+      ),
+      h(Card, { style: { textAlign: "center" } },
+        h("div", { style: { fontFamily: MONO, fontSize: "16px", color: BRONZE, fontWeight: 700 } }, fmt(interets)),
+        h("div", { style: { fontSize: "11px", color: INK_SOFT, marginTop: "4px" } }, "Intérêts payés (FCFA)")
+      )
+    )
+  );
+}
+
+const TABS = [
+  { key: "home", label: "Accueil", icon: HomeIcon, 
