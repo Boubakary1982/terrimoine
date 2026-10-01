@@ -24,7 +24,6 @@
 <div id="root">
   <div style="font-family: Arial, sans-serif; padding: 40px 20px; text-align: center; color: #6B5B4D;">
     <div style="font-size: 15px;">Chargement…</div>
-    <div style="font-size: 12.5px; margin-top: 10px;">Connexion lente ? Ce chargement est volontairement léger — patientez quelques secondes.</div>
   </div>
 </div>
 
@@ -34,8 +33,7 @@ setTimeout(function () {
     var r = document.getElementById("root");
     if (r) r.innerHTML = '<div style="font-family: Arial, sans-serif; padding: 40px 20px; text-align: center; color: #1F2A2C;">'
       + '<div style="font-size: 15px; font-weight: 600; margin-bottom: 10px;">La page n\'a pas pu charger.</div>'
-      + '<div style="font-size: 13px; color: #6B5B4D;">Vérifiez votre connexion internet et rechargez la page. Si le problème persiste, contactez Terrimoine sur WhatsApp +223 82 68 35 41.</div>'
-      + '</div>';
+      + '<div style="font-size: 13px; color: #6B5B4D;">Vérifiez votre connexion internet et rechargez la page. Si le problème persiste, contactez Terrimoine sur WhatsApp +223 82 68 35 41.</div></div>';
   }
 }, 8000);
 </script>
@@ -74,22 +72,30 @@ const CalcIcon = (p) => h(Icon, p,
 );
 const BackIcon = (p) => h(Icon, p, h("polyline", { points: "15 18 9 12 15 6" }));
 
+function LogoMark({ size = 30 }) {
+  return h("svg", { width: size, height: size, viewBox: "0 0 120 120", style: { flexShrink: 0 } },
+    h("rect", { x: 22, y: 76, width: 76, height: 13, rx: 2, fill: PAPER }),
+    h("rect", { x: 22, y: 57, width: 54, height: 13, rx: 2, fill: BRONZE }),
+    h("rect", { x: 22, y: 38, width: 32, height: 13, rx: 2, fill: PAPER })
+  );
+}
+
 const ZONES = [
   { name: "Centre / résidentiel prime", quartiers: [
     { nom: "ACI 2000", val: "380 000", note: "loyer moyen FCFA/mois" },
-    { nom: "Badalabougou", val: "650 000", note: "loyer moyen FCFA/mois" },
-    { nom: "Hamdallaye ACI", val: null, note: "collecte en cours" },
+    { nom: "Badalabougou", val: "145 417", note: "loyer moyen FCFA/mois" },
+    { nom: "Hamdallaye ACI", val: "525 000", note: "prix médian FCFA/m² (vente)" },
     { nom: "Niaréla", val: null, note: "collecte en cours" },
   ]},
   { name: "Résidentiel établi", quartiers: [
-    { nom: "Sotuba", val: "300 000", note: "prix médian FCFA/m² (vente)" },
-    { nom: "Sébénikoro", val: null, note: "collecte en cours" },
-    { nom: "Djicoroni Para", val: null, note: "collecte en cours" },
+    { nom: "Sotuba", val: "150 000", note: "prix médian FCFA/m² (vente)" },
+    { nom: "Sébénikoro", val: "97 500", note: "prix médian FCFA/m² (vente)" },
+    { nom: "Bamako Coura", val: "200 000", note: "prix médian FCFA/m² (vente)" },
   ]},
   { name: "Extension / périphérie", quartiers: [
-    { nom: "Yirimadio", val: "210 000", note: "prix médian FCFA/m² (vente)" },
-    { nom: "Faladié", val: "130 000", note: "loyer moyen FCFA/mois" },
-    { nom: "Kalaban Coura", val: null, note: "collecte en cours" },
+    { nom: "Yirimadio", val: "30 000", note: "prix médian FCFA/m² (vente)" },
+    { nom: "Faladié", val: "60 000", note: "prix médian FCFA/m² (vente)" },
+    { nom: "Sirakoro", val: "30 000", note: "prix médian FCFA/m² (vente)" },
   ]},
 ];
 
@@ -104,14 +110,6 @@ const PROS = [
   { icon: MapIcon, label: "Géomètres agréés", note: "bornage & délimitation" },
   { icon: FileIcon, label: "Agents des Domaines", note: "titres & cadastre" },
 ];
-
-function LogoMark({ size = 30 }) {
-  return h("svg", { width: size, height: size, viewBox: "0 0 120 120", style: { flexShrink: 0 } },
-    h("rect", { x: 22, y: 76, width: 76, height: 13, rx: 2, fill: PAPER }),
-    h("rect", { x: 22, y: 57, width: 54, height: 13, rx: 2, fill: BRONZE }),
-    h("rect", { x: 22, y: 38, width: 32, height: 13, rx: 2, fill: PAPER })
-  );
-}
 
 function TopBar({ title, onBack }) {
   return h("div", {
@@ -151,16 +149,31 @@ function fmt(n) {
   return Math.round(n).toLocaleString("fr-FR").replace(/,/g, " ").replace(/\u00A0/g, " ");
 }
 
+function VideoEmbed() {
+  return h("div", {
+    style: { marginBottom: "16px", borderRadius: "10px", overflow: "hidden", background: INK, position: "relative", paddingTop: "177.7%" },
+  },
+    h("iframe", {
+      src: "https://www.youtube.com/embed/wSM4xI5uivQ",
+      title: "Présentation Terrimoine",
+      style: { position: "absolute", top: 0, left: 0, width: "100%", height: "100%", border: "none" },
+      allow: "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture",
+      allowFullScreen: true,
+    })
+  );
+}
+
 function HomeScreen({ openCalc }) {
   return h("div", { style: { padding: "18px" } },
     h("div", { style: { fontFamily: DISPLAY, fontSize: "24px", color: INK, marginBottom: "6px", lineHeight: 1.2 } }, "Le marché immobilier malien, enfin mesuré."),
     h("div", { style: { fontSize: "13.5px", color: INK_SOFT, marginBottom: "16px", lineHeight: 1.5 } }, "Rapports trimestriels indépendants, données vérifiées, aucune agence favorisée."),
+    h(VideoEmbed),
     h(Card, { style: { marginBottom: "16px", background: PAPER_DEEP, border: "none" } },
       h("div", { style: { fontFamily: DISPLAY, fontSize: "14.5px", color: INK, marginBottom: "6px" } }, "Notre objectif"),
       h("div", { style: { fontSize: "13px", color: INK_SOFT, lineHeight: 1.55 } }, "Au Mali, tout le monde parle d'immobilier, mais personne ne le mesure vraiment. Terrimoine donne à tous — agences, notaires, diaspora, investisseurs — les mêmes données vérifiées, chaque trimestre, sans jamais favoriser un acteur en particulier.")
     ),
     h(Card, { style: { display: "flex", justifyContent: "space-around", marginBottom: "16px" } },
-      h(Stat, { label: "Quartiers suivis", value: "24" }),
+      h(Stat, { label: "Quartiers suivis", value: "26" }),
       h(Stat, { label: "Publication", value: "Trimestrielle" }),
       h(Stat, { label: "Sources", value: "INSTAT·BCEAO" })
     ),
@@ -195,7 +208,7 @@ function RapportScreen() {
   return h("div", { style: { padding: "18px" } },
     h("div", { style: { fontSize: "13px", color: INK_SOFT, marginBottom: "16px", lineHeight: 1.5 } }, "Notre publication phare : chaque trimestre, un état des lieux complet et indépendant du marché immobilier malien, gratuit et téléchargeable."),
     h("div", { style: { background: INK, color: PAPER, borderRadius: "10px", padding: "22px", marginBottom: "18px" } },
-      h("div", { style: { fontFamily: MONO, fontSize: "10px", letterSpacing: "2px", color: BRONZE, marginBottom: "8px" } }, "ÉDITION EN COURS"),
+      h("div", { style: { fontFamily: MONO, fontSize: "10px", letterSpacing: "2px", color: BRONZE, marginBottom: "8px" } }, "ÉDITION T3 2026 EN COURS"),
       h("div", { style: { fontFamily: DISPLAY, fontSize: "19px", lineHeight: 1.3 } }, "Rapport Trimestriel du Marché Immobilier du Mali")
     ),
     h("div", { style: { display: "grid", gap: "8px", marginBottom: "20px" } },
@@ -320,64 +333,4 @@ function CalculatorScreen() {
     h("div", { style: { display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px" } },
       h(Card, { style: { textAlign: "center" } },
         h("div", { style: { fontFamily: MONO, fontSize: "16px", color: BRONZE, fontWeight: 700 } }, fmt(coutTotal)),
-        h("div", { style: { fontSize: "11px", color: INK_SOFT, marginTop: "4px" } }, "Coût total (FCFA)")
-      ),
-      h(Card, { style: { textAlign: "center" } },
-        h("div", { style: { fontFamily: MONO, fontSize: "16px", color: BRONZE, fontWeight: 700 } }, fmt(interets)),
-        h("div", { style: { fontSize: "11px", color: INK_SOFT, marginTop: "4px" } }, "Intérêts payés (FCFA)")
-      )
-    )
-  );
-}
-
-const TABS = [
-  { key: "home", label: "Accueil", icon: HomeIcon, screen: HomeScreen },
-  { key: "rapport", label: "Rapport", icon: FileIcon, screen: RapportScreen },
-  { key: "quartiers", label: "Quartiers", icon: MapIcon, screen: QuartiersScreen },
-  { key: "annuaire", label: "Annuaire", icon: UsersIcon, screen: AnnuaireScreen },
-  { key: "plus", label: "Plus", icon: MoreIcon, screen: PlusScreen },
-];
-const TITLES = { home: "Accueil", rapport: "Rapport Trimestriel", quartiers: "Prix par quartier", annuaire: "Professionnels", plus: "Plus" };
-
-function App() {
-  const [tab, setTab] = useState("home");
-  const [showCalc, setShowCalc] = useState(false);
-  const Active = TABS.find((t) => t.key === tab).screen;
-
-  if (showCalc) {
-    return h("div", { style: { fontFamily: BODY, background: PAPER, minHeight: "100%", display: "flex", flexDirection: "column" } },
-      h(TopBar, { title: "Calculateur de prêt", onBack: () => setShowCalc(false) }),
-      h("div", { style: { flex: 1, overflowY: "auto", paddingBottom: "24px" } }, h(CalculatorScreen))
-    );
-  }
-
-  return h("div", { style: { fontFamily: BODY, background: PAPER, minHeight: "100%", display: "flex", flexDirection: "column" } },
-    h(TopBar, { title: TITLES[tab] }),
-    h("div", { style: { flex: 1, overflowY: "auto", paddingBottom: "70px" } }, h(Active, { openCalc: () => setShowCalc(true) })),
-    h("div", {
-      style: { position: "fixed", bottom: 0, left: 0, right: 0, background: "#fff", borderTop: `1px solid ${PAPER_DEEP}`, display: "flex", paddingBottom: "env(safe-area-inset-bottom)" },
-    },
-      TABS.map(({ key, label, icon: IconComp }) => {
-        const active = tab === key;
-        return h("button", {
-          key: key, onClick: () => setTab(key),
-          style: { flex: 1, background: "none", border: "none", padding: "9px 4px 8px", display: "flex", flexDirection: "column", alignItems: "center", gap: "3px", cursor: "pointer" },
-        },
-          h(IconComp, { size: 21, color: active ? BRONZE : INK_SOFT, strokeWidth: active ? 2.1 : 1.7 }),
-          h("span", { style: { fontSize: "10px", color: active ? BRONZE : INK_SOFT, fontWeight: active ? 700 : 400 } }, label)
-        );
-      })
-    )
-  );
-}
-
-ReactDOM.createRoot(document.getElementById("root")).render(h(App));
-
-if ("serviceWorker" in navigator) {
-  window.addEventListener("load", () => {
-    navigator.serviceWorker.register("sw.js").catch(() => {});
-  });
-}
-</script>
-</body>
-</html>
+ 
