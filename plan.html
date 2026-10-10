@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>Plan de maison — Terrimoine</title>
+<meta name="theme-color" content="#3E2723">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-3SSM8OZ9TB"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-3SSM8OZ9TB',{page_title:'plan-maison'});</script>
+<style>
+:root{--ink:#3E2723;--bronze:#A67C3D;--paper:#F1EAD9;--paper-deep:#E6DBC3;--ink-soft:#6B5B4D}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;overscroll-behavior:none}
+.top{background:var(--ink);color:var(--paper);padding:12px 16px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:5}
+.top a{color:var(--paper);text-decoration:none;font-size:22px;line-height:1}
+.top .e{font-size:10px;letter-spacing:2px;color:var(--bronze)}.top .t{font-family:Georgia,serif;font-size:18px}
+.wrap{padding:12px 16px 40px;max-width:720px;margin:0 auto}
+.sub{font-size:12.5px;color:var(--ink-soft);line-height:1.5;margin-bottom:10px}
+.row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px;align-items:flex-end}
+label{font-size:10.5px;color:var(--ink-soft);display:block;margin-bottom:3px}
+input,select{font-size:14px;padding:8px 10px;border:1px solid var(--paper-deep);border-radius:8px;background:#fff;color:var(--ink);width:100%}
+.f{flex:1;min-width:70px}
+button{font:inherit;font-size:12.5px;border:1px solid var(--bronze);background:#fff;color:var(--ink);border-radius:8px;padding:9px 11px;cursor:pointer}
+button.p{background:var(--ink);color:#fff;border-color:var(--ink)}
+button.d{color:#B3472F;border-color:#B3472F}
+.chips{display:flex;gap:6px;overflow-x:auto;padding-bottom:6px;margin-bottom:8px}.chips button{white-space:nowrap}
+#cv{width:100%;background:#fff;border:1px solid var(--paper-deep);border-radius:10px;touch-action:none;display:block}
+.card{background:#FBF6EA;border:1px solid var(--paper-deep);border-radius:10px;padding:12px 14px;margin:10px 0;font-size:12.5px;line-height:1.6;color:var(--ink-soft)}
+.stat{display:flex;justify-content:space-between;font-size:13px;padding:3px 0}.stat b{color:var(--ink)}
+a.cta{display:flex;justify-content:center;text-decoration:none;font-size:13px;font-weight:600;color:#fff;background:var(--ink);border-radius:10px;padding:14px;margin-top:8px}
+</style></head><body>
+<div class="top"><a href="index.html" aria-label="Retour">‹</a><div><div class="e">TERRIMOINE</div><div class="t">Plan de ma maison</div></div></div>
+<div class="wrap">
+<div class="sub">Définissez votre terrain, ajoutez des pièces, puis faites-les glisser. Touchez une pièce pour changer sa taille, la tourner ou la renommer. Les plans sont des croquis indicatifs.</div>
+<div class="row">
+ <div class="f"><label>Terrain : largeur (m)</label><input id="tl" inputmode="numeric" value="15"></div>
+ <div class="f"><label>Profondeur (m)</label><input id="tp" inputmode="numeric" value="20"></div>
+ <div class="f"><label>Niveau dessiné</label><select id="niv"><option value="1">RDC</option><option value="2">Étage 1</option><option value="3">Étage 2</option><option value="4">Étage 3</option></select></div>
+</div>
+<div class="chips" id="chips"></div>
+<svg id="cv" viewBox="0 0 300 400"></svg>
+<div class="card" id="sel" style="display:none">
+ <div class="row"><div class="f" style="flex:2"><label>Nom</label><input id="sn"></div>
+  <div class="f"><label>Largeur (m)</label><input id="sw" inputmode="decimal"></div>
+  <div class="f"><label>Longueur (m)</label><input id="sh" inputmode="decimal"></div></div>
+ <div class="row" style="margin:0"><button id="rot">Tourner</button><button id="dup">Dupliquer</button><button class="d" id="del">Supprimer</button></div>
+</div>
+<div class="card" id="stats"></div>
+<div class="row"><button class="p" id="png">Télécharger l'image</button><button id="clr" class="d">Tout effacer</button></div>
+<a class="cta" id="devis" href="index.html#devis">Calculer le devis de ce plan</a>
+<div class="card">Ce croquis aide à visualiser l'implantation. Il n'a aucune valeur pour un permis de construire : faites établir les plans définitifs et les calculs de structure par un architecte ou un bureau d'études agréé.</div>
+</div>
+<script>
+var SC=20, M=1; // 1 m = 20 unités
+var TYPES=[["Chambre",3.5,4],["Salon",5,6],["Cuisine",3,4],["Douche/WC",2,2.5],["Couloir",1.2,5],["Véranda",2.5,6],["Garage",3,5],["Escalier",2.5,4],["Magasin",3,3]];
+var COL={"Chambre":"#E8D9B8","Salon":"#F3E3C7","Cuisine":"#E3D5C0","Douche/WC":"#CFE0E4","Couloir":"#EFEFEF","Véranda":"#E0EBD3","Garage":"#D9D9D9","Escalier":"#E9C9B5","Magasin":"#E7DCCB"};
+var S; try{S=JSON.parse(localStorage.getItem("terrimoine_plan"))}catch(e){}
+if(!S||!S.lv)S={tl:15,tp:20,niv:1,lv:{1:[],2:[],3:[],4:[]},sel:-1};
+var $=function(i){return document.getElementById(i)}, cv=$("cv");
+function save(){try{localStorage.setItem("terrimoine_plan",JSON.stringify(S))}catch(e){}}
+function rooms(){return S.lv[S.niv]}
+function snap(v){return Math.round(v*2)/2}
+function draw(forExport){
+  var W=S.tl*SC, H=S.tp*SC, pad=24;
+  cv.setAttribute("viewBox",(-pad)+" "+(-pad)+" "+(W+2*pad)+" "+(H+2*pad));
+  var h='<rect x="0" y="0" width="'+W+'" height="'+H+'" fill="#FBF8F0" stroke="#3E2723" stroke-width="2" stroke-dasharray="6 4"/>';
+  for(var x=1;x<S.tl;x++)h+='<line x1="'+x*SC+'" y1="0" x2="'+x*SC+'" y2="'+H+'" stroke="#EDE5D2" stroke-width="'+(x%5?0.4:0.9)+'"/>';
+  for(var y=1;y<S.tp;y++)h+='<line x1="0" y1="'+y*SC+'" x2="'+W+'" y2="'+y*SC+'" stroke="#EDE5D2" stroke-width="'+(y%5?0.4:0.9)+'"/>';
+  h+='<text x="'+W/2+'" y="-8" text-anchor="middle" font-size="11" fill="#6B5B4D">'+S.tl+' m</text><text x="-8" y="'+H/2+'" text-anchor="middle" font-size="11" fill="#6B5B4D" transform="rotate(-90 -8 '+H/2+')">'+S.tp+' m</text>';
+  if(S.niv>1)(S.lv[S.niv-1]||[]).forEach(function(r){h+='<rect x="'+r.x*SC+'" y="'+r.y*SC+'" width="'+r.w*SC+'" height="'+r.h*SC+'" fill="none" stroke="#C9B99A" stroke-dasharray="3 3"/>'});
+  rooms().forEach(function(r,i){
+    var on=i===S.sel&&!forExport, fs=Math.max(8,Math.min(12,r.w*SC/Math.max(4,r.n.length)*1.6));
+    h+='<g data-i="'+i+'"><rect x="'+r.x*SC+'" y="'+r.y*SC+'" width="'+r.w*SC+'" height="'+r.h*SC+'" fill="'+(COL[r.t]||"#eee")+'" stroke="'+(on?"#A67C3D":"#3E2723")+'" stroke-width="'+(on?3:1.6)+'"/>'+
+    '<text x="'+(r.x+r.w/2)*SC+'" y="'+((r.y+r.h/2)*SC-2)+'" text-anchor="middle" font-size="'+fs+'" fill="#3E2723" pointer-events="none">'+esc(r.n)+'</text>'+
+    '<text x="'+(r.x+r.w/2)*SC+'" y="'+((r.y+r.h/2)*SC+11)+'" text-anchor="middle" font-size="9" fill="#6B5B4D" pointer-events="none">'+r.w+'×'+r.h+' m</text></g>';
+  });
+  cv.innerHTML=h; stats(); selUI(); save();
+}
+function esc(t){return String(t).replace(/[&<>]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;"}[c]})}
+function stats(){
+  var tot=0,per=[];for(var l=1;l<=4;l++){var a=0;S.lv[l].forEach(function(r){a+=r.w*r.h});if(a>0){per.push([l,a]);tot+=a}}
+  var T=S.tl*S.tp,a1=(S.lv[1]||[]).reduce(function(s,r){return s+r.w*r.h},0);
+  var n=0;per.forEach(function(p){n=Math.max(n,p[0])});
+  var ch=0,dou=0;for(var l2=1;l2<=4;l2++)S.lv[l2].forEach(function(r){if(r.t==="Chambre")ch++;if(r.t==="Douche/WC")dou++});
+  $("stats").innerHTML='<div class="stat"><span>Terrain</span><b>'+T+' m²</b></div><div class="stat"><span>Surface dessinée (tous niveaux)</span><b>'+tot.toFixed(1).replace(".",",")+' m²</b></div>'+
+   '<div class="stat"><span>Emprise au sol (RDC)</span><b>'+a1.toFixed(1).replace(".",",")+' m² ('+Math.round(a1/T*100)+' %)</b></div><div class="stat"><span>Chambres · douches/WC</span><b>'+ch+' · '+dou+'</b></div>';
+  var emp=Math.max(a1,20),niv=Math.max(1,n);
+  $("devis").href="index.html#devis="+Math.round(emp)+","+niv+","+S.tl+","+S.tp;
+}
+function selUI(){var r=rooms()[S.sel],b=$("sel");if(!r){b.style.display="none";return}b.style.display="block";
+  if(document.activeElement!==$("sn"))$("sn").value=r.n;if(document.activeElement!==$("sw"))$("sw").value=r.w;if(document.activeElement!==$("sh"))$("sh").value=r.h}
+function clamp(r){r.w=Math.max(1,Math.min(r.w,S.tl));r.h=Math.max(1,Math.min(r.h,S.tp));r.x=Math.max(0,Math.min(r.x,S.tl-r.w));r.y=Math.max(0,Math.min(r.y,S.tp-r.h))}
+function add(t){var d=TYPES.filter(function(x){return x[0]===t})[0];var r={t:t,n:t,w:d[1],h:d[2],x:0,y:0};
+  var k=rooms().length;r.x=(k*1.5)%Math.max(1,S.tl-r.w);r.y=(k*1.5)%Math.max(1,S.tp-r.h);clamp(r);rooms().push(r);S.sel=rooms().length-1;try{gtag("event","plan_ajout_piece",{piece:t})}catch(e){}draw()}
+TYPES.forEach(function(t){var b=document.createElement("button");b.textContent="+ "+t[0];b.onclick=function(){add(t[0])};$("chips").appendChild(b)});
+// glisser
+var drag=null;
+function pt(e){var m=cv.getScreenCTM().inverse(),p=cv.createSVGPoint();p.x=e.clientX;p.y=e.clientY;p=p.matrixTransform(m);return{x:p.x/SC,y:p.y/SC}}
+cv.addEventListener("pointerdown",function(e){var g=e.target.closest("g[data-i]");if(!g){S.sel=-1;draw();return}
+  var i=+g.getAttribute("data-i"),p=pt(e),r=rooms()[i];S.sel=i;drag={i:i,dx:p.x-r.x,dy:p.y-r.y};cv.setPointerCapture(e.pointerId);draw()});
+cv.addEventListener("pointermove",function(e){if(!drag)return;var p=pt(e),r=rooms()[drag.i];r.x=snap(p.x-drag.dx);r.y=snap(p.y-drag.dy);clamp(r);draw()});
+function end(){drag=null}cv.addEventListener("pointerup",end);cv.addEventListener("pointercancel",end);
+function cur(){return rooms()[S.sel]}
+$("sn").oninput=function(){var r=cur();if(r){r.n=this.value;draw()}};
+$("sw").oninput=function(){var r=cur(),v=parseFloat(this.value.replace(",","."));if(r&&v>=1){r.w=Math.round(v*10)/10;clamp(r);draw()}};
+$("sh").oninput=function(){var r=cur(),v=parseFloat(this.value.replace(",","."));if(r&&v>=1){r.h=Math.round(v*10)/10;clamp(r);draw()}};
+$("rot").onclick=function(){var r=cur();if(r){var t=r.w;r.w=r.h;r.h=t;clamp(r);$("sw").value=r.w;$("sh").value=r.h;draw()}};
+$("dup").onclick=function(){var r=cur();if(r){var c=JSON.parse(JSON.stringify(r));c.x+=1;c.y+=1;clamp(c);rooms().push(c);S.sel=rooms().length-1;draw()}};
+$("del").onclick=function(){if(S.sel>=0){rooms().splice(S.sel,1);S.sel=-1;draw()}};
+$("clr").onclick=function(){if(confirm("Effacer tout le plan ?")){S.lv={1:[],2:[],3:[],4:[]};S.sel=-1;draw()}};
+function dims(){var l=parseInt($("tl").value)||15,p=parseInt($("tp").value)||20;S.tl=Math.max(4,Math.min(60,l));S.tp=Math.max(4,Math.min(60,p));
+  for(var k in S.lv)S.lv[k].forEach(clamp);draw()}
+$("tl").onchange=dims;$("tp").onchange=dims;
+$("niv").onchange=function(){S.niv=+this.value;S.sel=-1;draw()};
+$("png").onclick=function(){draw(true);var W=S.tl*SC+48,H=S.tp*SC+48;var x=new XMLSerializer().serializeToString(cv);
+  var img=new Image();img.onload=function(){var c=document.createElement("canvas");c.width=W*2;c.height=H*2;var g=c.getContext("2d");g.fillStyle="#fff";g.fillRect(0,0,c.width,c.height);g.drawImage(img,0,0,c.width,c.height);
+   g.fillStyle="#A67C3D";g.font="20px sans-serif";g.fillText("terrimoine.com",16,c.height-14);
+   var a=document.createElement("a");a.download="plan-maison-terrimoine.png";a.href=c.toDataURL("image/png");a.click();draw();try{gtag("event","plan_telechargement")}catch(e){}};
+  img.src="data:image/svg+xml;charset=utf-8,"+encodeURIComponent(x.replace("<svg",'<svg width="'+W+'" height="'+H+'"'))};
+$("tl").value=S.tl;$("tp").value=S.tp;$("niv").value=S.niv;
+(function(){var h=location.hash.match(/terrain=(\d+),(\d+)/);if(h){S.tl=+h[1];S.tp=+h[2];$("tl").value=S.tl;$("tp").value=S.tp}})();
+draw();
+</script></body></html>
