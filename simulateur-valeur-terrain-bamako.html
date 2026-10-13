@@ -1,0 +1,95 @@
+<!DOCTYPE html><html lang="fr"><head><meta charset="UTF-8"><title>Simulateur de valeur d&#x27;un terrain à Bamako et scénarios de prix | Terrimoine</title>
+<meta name="description" content="Estimez la valeur d&#x27;un terrain à Bamako selon le quartier et la surface, puis testez trois scénarios de hausse sur 3 à 15 ans. Gratuit, données Terrimoine T3 2026."><link rel="canonical" href="https://terrimoine.com/simulateur-valeur-terrain-bamako.html">
+<meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#3E2723">
+<meta property="og:type" content="article"><meta property="og:site_name" content="Terrimoine"><meta property="og:locale" content="fr_FR">
+<meta property="og:title" content="Simulateur de valeur d&#x27;un terrain à Bamako et scénarios de prix | Terrimoine"><meta property="og:description" content="Estimez la valeur d&#x27;un terrain à Bamako selon le quartier et la surface, puis testez trois scénarios de hausse sur 3 à 15 ans. Gratuit, données Terrimoine T3 2026."><meta property="og:url" content="https://terrimoine.com/simulateur-valeur-terrain-bamako.html">
+<meta property="og:image" content="https://terrimoine.com/og-terrimoine.png"><meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="/icons/icon-192.png">
+<script type="application/ld+json">[{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Accueil", "item": "https://terrimoine.com/"}, {"@type": "ListItem", "position": 2, "name": "Simulateur de valeur", "item": "https://terrimoine.com/simulateur-valeur-terrain-bamako.html"}]}, {"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Comment le simulateur estime-t-il la valeur du terrain ?", "acceptedAnswer": {"@type": "Answer", "text": "Il multiplie le prix médian au m² du quartier choisi (rapport Terrimoine T3 2026) par la surface saisie, puis applique la marge d'incertitude que vous indiquez."}}, {"@type": "Question", "name": "Les trois scénarios sont-ils des prévisions ?", "acceptedAnswer": {"@type": "Answer", "text": "Non. Ce sont des taux de hausse annuelle que vous pouvez modifier. Les valeurs de départ (2, 5 et 8 %) sont des exemples de calcul, pas des prévisions de Terrimoine."}}, {"@type": "Question", "name": "Pourquoi une marge d'incertitude ?", "acceptedAnswer": {"@type": "Answer", "text": "Parce qu'un prix médian de quartier ne dit pas le prix d'une parcelle précise. La marge par défaut est de ±20 %, vous pouvez la changer."}}, {"@type": "Question", "name": "Le résultat remplace-t-il une expertise ?", "acceptedAnswer": {"@type": "Answer", "text": "Non. Pour un prix ferme, faites appel à un expert évaluateur ou à un notaire. Le simulateur donne un ordre de grandeur."}}]}]</script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-3SSM8OZ9TB"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-3SSM8OZ9TB');</script>
+<style>
+:root{--ink:#3E2723;--bronze:#A67C3D;--paper:#F1EAD9;--deep:#E6DBC3;--soft:#6B5B4D}
+*{box-sizing:border-box}body{margin:0;font-family:'Segoe UI',Arial,sans-serif;background:var(--paper);color:var(--ink);line-height:1.6;font-size:16px}
+header{background:var(--ink);padding:14px 18px;border-bottom:1px solid var(--bronze)}
+header a{color:var(--paper);text-decoration:none;font-family:Georgia,serif;font-size:21px}header small{display:block;font-family:'Courier New',monospace;font-size:10px;letter-spacing:2px;color:var(--bronze)}
+main{max-width:760px;margin:0 auto;padding:18px 18px 40px}
+nav.bc{font-size:13px;color:var(--soft);margin-bottom:10px}nav.bc a{color:var(--soft)}
+h1{font-family:Georgia,serif;font-weight:400;font-size:27px;line-height:1.25;margin:6px 0 10px}
+h2{font-family:Georgia,serif;font-weight:400;font-size:20px;margin:26px 0 8px}
+p{margin:0 0 12px}.lead{font-size:17px;color:#4e3f36}
+.card{background:#fff;border:1px solid var(--deep);border-radius:10px;padding:14px 16px;margin:12px 0}
+.kpis{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px 0}
+.kpi{background:#fff;border:1px solid var(--deep);border-radius:10px;padding:12px}.kpi b{display:block;font-family:Georgia,serif;font-size:21px;color:var(--ink)}.kpi span{font-size:12.5px;color:var(--soft)}
+table{width:100%;border-collapse:collapse;background:#fff;border:1px solid var(--deep);border-radius:10px;overflow:hidden;font-size:14.5px}
+th,td{padding:9px 10px;text-align:left;border-bottom:1px solid var(--deep)}th{background:var(--deep);font-size:12.5px;text-transform:uppercase;letter-spacing:.5px}td.n,th.n{text-align:right;white-space:nowrap}
+a{color:#7A4B12}.btn{display:block;text-align:center;background:var(--ink);color:#fff!important;text-decoration:none;font-weight:700;border-radius:10px;padding:15px;margin:14px 0}
+.btn.alt{background:none;color:var(--ink)!important;border:1px solid var(--bronze)}
+.note{font-size:13px;color:var(--soft);background:#FBF1DC;border:1px solid #E5C98A;border-radius:8px;padding:10px 12px;margin:14px 0}
+details{background:#fff;border:1px solid var(--deep);border-radius:10px;padding:10px 14px;margin:8px 0}summary{cursor:pointer;font-weight:600}
+ul.l{padding-left:18px}ul.l li{margin:4px 0}
+footer{background:var(--ink);color:var(--paper);padding:22px 18px;font-size:14px}footer a{color:#E3C58A;display:inline-block;margin:3px 10px 3px 0}footer .w{max-width:760px;margin:0 auto}
+</style></head><body>
+<header><a href="/"><small>IMMO · PATRIMOINE · ACTUALITÉS</small>Terrimoine</a></header>
+<main><nav class="bc"><a href="/">Accueil</a> › Simulateur de valeur</nav><h1>Simulateur de valeur d'un terrain à Bamako et scénarios de prix</h1>
+<p class="lead">Choisissez votre quartier et la surface : le simulateur estime la valeur du terrain à partir du prix médian relevé par Terrimoine (T3 2026), puis montre ce qu'elle deviendrait dans trois scénarios de hausse <strong>que vous définissez</strong>.</p>
+<style>
+.sim label{display:block;font-size:13.5px;font-weight:600;margin:12px 0 4px}
+.sim input,.sim select{width:100%;font-size:17px;padding:11px;border:1px solid #cdbf9f;border-radius:8px;background:#fff;color:#3E2723;font-family:inherit}
+.sim .g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}.sim .g3 label{font-size:12.5px}
+.sim .big{font-family:Georgia,serif;font-size:26px}
+#res table{font-size:13px}#res th,#res td{padding:8px 5px}#res th{font-size:11px;letter-spacing:0}.sim small{color:#6B5B4D}
+</style>
+<div class="card sim">
+<label for="q">Quartier</label><select id="q"></select>
+<label for="s">Surface du terrain (m²)</label><input id="s" type="number" inputmode="numeric" min="50" max="5000" value="300">
+<label for="h">Horizon de projection</label><select id="h"><option value="3">3 ans</option><option value="5" selected>5 ans</option><option value="10">10 ans</option><option value="15">15 ans</option></select>
+<label>Hypothèses de hausse annuelle (% par an), à modifier</label>
+<div class="g3"><div><label for="r1">Prudent</label><input id="r1" type="number" inputmode="decimal" value="2" step="0.5"></div><div><label for="r2">Central</label><input id="r2" type="number" inputmode="decimal" value="5" step="0.5"></div><div><label for="r3">Dynamique</label><input id="r3" type="number" inputmode="decimal" value="8" step="0.5"></div></div>
+<label for="m">Marge d'incertitude sur le prix actuel (±%)</label><input id="m" type="number" inputmode="numeric" min="0" max="60" value="20">
+<small>Ces taux et cette marge sont des hypothèses de calcul modifiables. Ils ne sont pas des prévisions de Terrimoine.</small>
+</div>
+<div class="card sim" id="res" aria-live="polite"></div>
+<div id="chart"></div>
+<script>
+(function(){
+var D=[["Hamdallaye ACI", 525000], ["Bamako Coura", 200000], ["Badalabougou", 200000], ["Quartier du Fleuve", 200000], ["Baco Djicoroni", 200000], ["Sotuba", 150000], ["Sébénikoro", 97500], ["Faladié", 60000], ["Kalaban Coura", 60000], ["Lafiabougou", 60000], ["Yirimadio", 30000], ["Sirakoro", 30000]];
+function $(i){return document.getElementById(i)}
+function f(n){return Math.round(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g,"\u00a0")}
+var qs=$("q");D.forEach(function(x,i){var o=document.createElement("option");o.value=i;o.textContent=x[0]+" ("+f(x[1])+" F/m²)";qs.appendChild(o)});
+var COL=["#6B5B4D","#A67C3D","#3E2723"],NAM=["Prudent","Central","Dynamique"];
+function calc(){
+ var pm=D[+qs.value][1],s=Math.max(0,+$("s").value||0),H=+$("h").value,m=Math.min(100,Math.max(0,+$("m").value||0))/100;
+ var r=[+$("r1").value||0,+$("r2").value||0,+$("r3").value||0];
+ var v0=pm*s,lo=v0*(1-m),hi=v0*(1+m);
+ var h='<div><small>Valeur estimée aujourd\u2019hui</small><div class="big">'+f(v0)+' FCFA</div><small>Entre '+f(lo)+' et '+f(hi)+' FCFA (prix médian du quartier \u00d7 surface, \u00b1'+Math.round(m*100)+' %). Hors frais de mutation, de titre et de notaire.</small></div>';
+ h+='<div style="overflow-x:auto;margin-top:14px"><table><thead><tr><th>Scénario</th><th class="n">Valeur dans '+H+' ans</th><th class="n">Gain</th></tr></thead><tbody>';
+ r.forEach(function(x,i){var k=Math.pow(1+x/100,H),v=v0*k;h+='<tr><td>'+NAM[i]+'<br><small>'+x.toString().replace(".",",")+' % par an</small></td><td class="n" style="white-space:normal">'+f(v)+' F<br><small>'+f(lo*k)+' \u2013 '+f(hi*k)+'</small></td><td class="n">'+(v>=v0?"+":"\u2212")+f(Math.abs(v-v0))+' F</td></tr>'});
+ h+='</tbody></table></div><p style="font-size:13px;color:#6B5B4D;margin:8px 0 0">Valeur future = valeur actuelle \u00d7 (1 + hausse)^années. Aucune inflation, aucun frais ni impôt n\u2019est déduit. La ligne en petit montre la fourchette liée à la marge d\u2019incertitude.</p>';
+ $("res").innerHTML=h;
+ var W=600,Ht=260,pl=14,pr=14,pt=14,pb=34,vmax=0,vmin=1e18,series=[];
+ r.forEach(function(x){var a=[];for(var t=0;t<=H;t++){a.push(v0*Math.pow(1+x/100,t))}series.push(a);a.forEach(function(v){vmax=Math.max(vmax,v);vmin=Math.min(vmin,v)})});
+ if(vmax<=vmin)vmax=vmin+1;
+ function X(t){return pl+(W-pl-pr)*t/H}function Y(v){return pt+(Ht-pt-pb)*(1-(v-vmin)/(vmax-vmin))}
+ var svg='';
+ series.forEach(function(a,i){svg+='<polyline fill="none" stroke="'+COL[i]+'" stroke-width="3" points="'+a.map(function(v,t){return X(t).toFixed(0)+","+Y(v).toFixed(0)}).join(" ")+'"/>'});
+ for(var t=0;t<=H;t+=(H>=10?5:1)){svg+='<text x="'+X(t).toFixed(0)+'" y="'+(Ht-10)+'" font-size="14" text-anchor="middle" fill="#6B5B4D">'+(t===0?"Auj.":t+" ans")+'</text>'}
+ var leg=NAM.map(function(n,i){return '<span style="color:'+COL[i]+'">\u25a0</span> '+n+' ('+r[i].toString().replace(".",",")+' %)'}).join(" \u00b7 ");
+ $("chart").innerHTML='<svg viewBox="0 0 '+W+' '+Ht+'" role="img" aria-label="Valeur du terrain selon trois scénarios" style="width:100%;height:auto;background:#fff;border:1px solid #E6DBC3;border-radius:10px"><title>Valeur du terrain selon trois scénarios</title>'+svg+'</svg><p style="font-size:12.5px;color:#6B5B4D;margin-top:4px">'+leg+'</p>';
+}
+["q","s","h","r1","r2","r3","m"].forEach(function(i){$(i).addEventListener("input",calc);$(i).addEventListener("change",calc)});
+calc();
+})();
+</script>
+<div class="note"><strong>Comment lire ce résultat.</strong> La valeur actuelle est une estimation à partir d'une médiane de quartier : le prix réel d'une parcelle dépend de la rue, de l'accès, du titre et de la négociation. Les trois scénarios sont des hypothèses de calcul : Terrimoine ne prévoit pas les prix, et ne publiera de projection qu'avec un historique réel suffisant.</div>
+<a class="btn" href="/frais-mutation-titrage-mali.html">Calculer le coût total d'achat (frais, notaire, titre)</a>
+<a class="btn alt" href="/rapport-marche-bamako.html">Lire le rapport du marché de Bamako, T3 2026</a>
+<h2>À quoi sert ce simulateur ?</h2>
+<ul class="l"><li>Estimer l'ordre de grandeur d'un terrain avant d'aller le visiter.</li><li>Comparer deux quartiers à budget égal.</li><li>Voir, sur 3 à 15 ans, l'effet d'une hausse prudente ou dynamique sur votre patrimoine.</li><li>Préparer une discussion avec un notaire, une banque ou un professionnel.</li></ul>
+<p><a href="/prix-immobilier-bamako.html">Voir les prix des 12 quartiers</a> · <a href="/simulateur-rendement-locatif-bamako.html">Simulateur de rendement locatif</a> · <a href="/verifier-un-terrain-mali.html">Vérifier un terrain avant d'acheter</a></p><h2>Questions fréquentes</h2><details><summary>Comment le simulateur estime-t-il la valeur du terrain ?</summary><p style="margin-top:8px">Il multiplie le prix médian au m² du quartier choisi (rapport Terrimoine T3 2026) par la surface saisie, puis applique la marge d&#x27;incertitude que vous indiquez.</p></details><details><summary>Les trois scénarios sont-ils des prévisions ?</summary><p style="margin-top:8px">Non. Ce sont des taux de hausse annuelle que vous pouvez modifier. Les valeurs de départ (2, 5 et 8 %) sont des exemples de calcul, pas des prévisions de Terrimoine.</p></details><details><summary>Pourquoi une marge d&#x27;incertitude ?</summary><p style="margin-top:8px">Parce qu&#x27;un prix médian de quartier ne dit pas le prix d&#x27;une parcelle précise. La marge par défaut est de ±20 %, vous pouvez la changer.</p></details><details><summary>Le résultat remplace-t-il une expertise ?</summary><p style="margin-top:8px">Non. Pour un prix ferme, faites appel à un expert évaluateur ou à un notaire. Le simulateur donne un ordre de grandeur.</p></details>
+<div class="card" style="background:#3E2723;color:#F1EAD9"><strong>Recevez le rapport chaque trimestre</strong><br><span style="font-size:14px">Le rapport gratuit et les alertes de prix, sur WhatsApp. Désabonnement à tout moment.</span><a class="btn" style="background:#A67C3D;margin-bottom:0" href="/#alertes">Recevoir le rapport et les alertes</a></div>
+<div class="note">Les chiffres de Terrimoine sont indicatifs. Ils ne remplacent pas l'avis d'un notaire, d'un expert évaluateur ou d'un géomètre. Voir notre <a href="/methodologie.html">méthodologie</a>.</div>
+<a class="btn alt" href="/#services">Une question ? Faites une demande à l'équipe Terrimoine</a>
+</main>
+<footer><div class="w"><strong>Terrimoine</strong> · l'immobilier malien, en toute confiance<br><br><a href="/prix-immobilier-bamako.html">Prix par quartier</a><a href="/calculateur-pret-immobilier-mali.html">Calculateur de prêt</a><a href="/devis-materiaux-construction-bamako.html">Devis matériaux</a><a href="/frais-mutation-titrage-mali.html">Frais de titrage</a><a href="/simulateur-rendement-locatif-bamako.html">Rendement locatif</a><a href="/verifier-un-terrain-mali.html">Vérifier un terrain</a><a href="/simulateur-impots-immobiliers-mali.html">Impôts immobiliers</a><a href="/guides.html">Guides</a><a href="/annonces-verifiees.html">Annonces vérifiées</a><a href="/methodologie.html">Méthodologie</a><a href="/a-propos.html">À propos</a><br><br>Hamdallaye, Rue 93, Porte 119, Bamako · WhatsApp +223 82 68 35 41 · GKIMMO +223 76 13 92 98 · boutamboura1982@gmail.com<br><a href="/privacy.html">Confidentialité</a></div></footer>
+</body></html>
