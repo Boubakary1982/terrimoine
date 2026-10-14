@@ -746,7 +746,8 @@ function screenVerif() {
 // À MODIFIER ICI : prix, statuts et contenus des offres (dispo:true quand le produit est prêt à être livré).
 // Version Google Play : l'appli Android (TWA) s'ouvre avec un referrer android-app:// ; on y masque les ventes numériques (règle Play Billing)
 var IN_PLAY = false;
-try { if (document.referrer.indexOf("android-app://") === 0) localStorage.setItem("terrimoine_play", "1"); IN_PLAY = localStorage.getItem("terrimoine_play") === "1"; } catch (e) { IN_PLAY = document.referrer.indexOf("android-app://") === 0; }
+var PLAY_RE = /^android-app:\/\/(com|ml)\.(terrimoine|gkimmo)/; // paquet de NOTRE appli Play uniquement (ex. ml.terrimoine.app)
+try { var _sa = window.matchMedia && window.matchMedia("(display-mode: standalone)").matches; if (PLAY_RE.test(document.referrer)) localStorage.setItem("terrimoine_play", "1"); else if (!_sa) localStorage.removeItem("terrimoine_play"); IN_PLAY = localStorage.getItem("terrimoine_play") === "1"; } catch (e) { IN_PLAY = PLAY_RE.test(document.referrer); }
 var OM_NUMBER = "+223 82683541";   // compte Orange Money pour les paiements
 var PREMIUM_PLANS = [
   { k: "essentiel", nom: "Essentiel", prix: 2500, per: "par mois", points: ["Bilan patrimonial détaillé (PDF) chaque trimestre", "Suivi de vos actifs : loyers, charges, valeur estimée", "1 alerte immobilière personnalisée"] },
