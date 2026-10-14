@@ -755,21 +755,21 @@ var PREMIUM_PLANS = [
 ];
 var BOUTIQUE = [
   { cat: "Guides et e-books", items: [
-    { id: "g1", t: "Guide : acheter un terrain sans se faire piéger", d: "Titres, vérifications, bornage, paiement, erreurs à éviter.", prix: 5000, dispo: false },
-    { id: "g2", t: "E-book : construire sa maison à Bamako, budget et étapes", d: "Du terrain à la remise des clés, avec les coûts par quartier.", prix: 7500, dispo: false },
-    { id: "g3", t: "Guide : investir dans le locatif au Mali", d: "Rendement, fiscalité, gestion, choix du quartier.", prix: 7500, dispo: false },
-    { id: "g4", t: "Guide : transmettre son patrimoine immobilier", d: "Préparer la succession, éviter l'indivision et les conflits.", prix: 10000, dispo: false }
+    { id: "g1", t: "Guide : acheter un terrain sans se faire piéger", d: "Document Word de 15 pages : titres, 8 pièges, méthode en 10 étapes, budget complet, paiement sécurisé, fiches à imprimer.", prix: 5000, dispo: true },
+    { id: "g2", t: "E-book : construire sa maison à Bamako, budget et étapes", d: "Document Word de 9 pages : prix du terrain par quartier, grille de budget à remplir avec vos devis, étapes, contrôles, contrat avec l'entrepreneur.", prix: 7500, dispo: true },
+    { id: "g3", t: "Guide : investir dans le locatif au Mali", d: "Document Word de 10 pages : rendement brut et net, loyers par quartier, exemple chiffré, gestion, impayés, fiches de calcul.", prix: 7500, dispo: true },
+    { id: "g4", t: "Guide : transmettre son patrimoine immobilier", d: "Document Word de 8 pages : inventaire, documents, héritiers, options à voir avec un notaire, fiches pratiques. Information générale.", prix: 10000, dispo: true }
   ] },
   { cat: "Modèles de contrats", items: [
     { id: "m1", t: "Modèle de contrat de bail d'habitation", d: "Document Word modifiable de 7 pages : contrat en 17 articles, état des lieux, quittance et notice d'utilisation.", prix: 3000, dispo: true },
-    { id: "m2", t: "Modèle de promesse de vente d'un terrain", d: "Document Word modifiable, à faire valider par un notaire.", prix: 4000, dispo: false },
-    { id: "m3", t: "Modèle de mandat de gestion locative", d: "Entre propriétaire et gestionnaire.", prix: 3000, dispo: false },
-    { id: "m4", t: "Pack de 10 modèles pour propriétaires et agences", d: "Bail, quittance, mise en demeure, état des lieux, etc.", prix: 15000, dispo: false }
+    { id: "m2", t: "Modèle de promesse de vente d'un terrain", d: "Document Word modifiable de 4 pages : 13 articles, acompte, vérifications, conditions, notice. À faire valider par un notaire.", prix: 4000, dispo: true },
+    { id: "m3", t: "Modèle de mandat de gestion locative", d: "Document Word modifiable de 5 pages : missions, pouvoirs limités, reversement, compte rendu mensuel.", prix: 3000, dispo: true },
+    { id: "m4", t: "Pack de 10 modèles pour propriétaires et agences", d: "10 documents Word modifiables : bail, état des lieux, quittance, mise en demeure, congés, mandat, promesse de vente, reçu, avenant.", prix: 15000, dispo: true }
   ] },
   { cat: "Webinaires et formations", items: [
-    { id: "w1", t: "Webinaire : investir dans l'immobilier depuis la diaspora", d: "En direct, avec questions-réponses et replay.", prix: 5000, dispo: false },
-    { id: "w2", t: "Formation : transmission de patrimoine, protéger sa famille", d: "Modules vidéo et fiches pratiques.", prix: 25000, dispo: false },
-    { id: "w3", t: "Formation : devenir investisseur immobilier, de zéro à premier bien", d: "Parcours complet avec exercices sur vos propres chiffres.", prix: 35000, dispo: false }
+    { id: "w1", t: "Webinaire : investir dans l'immobilier depuis la diaspora", d: "Session en direct avec questions-réponses. Kit remis : plan, diapositives commentées, checklists, plan d'action.", prix: 5000, dispo: false, insc: true },
+    { id: "w2", t: "Formation : transmission de patrimoine, protéger sa famille", d: "7 modules en direct sur inscription et 7 fiches pratiques à remplir (inventaire, dossier de famille, questions au notaire).", prix: 25000, dispo: false, insc: true },
+    { id: "w3", t: "Formation : devenir investisseur immobilier, de zéro à premier bien", d: "Parcours en 8 étapes avec classeur Excel d'exercices sur vos propres chiffres (budget, rendement, prêt).", prix: 35000, dispo: false, insc: true }
   ] }
 ];
 
@@ -923,14 +923,14 @@ function proBoutique() {
   return '<div class="sub">Guides, modèles de contrats et formations pour investir et transmettre en confiance.</div>' +
     BOUTIQUE.map(function(c) {
       return '<div class="section-label" style="margin-top:14px">' + c.cat + '</div>' + c.items.map(function(it) {
-        var msg = it.dispo ? "Bonjour, je souhaite acheter : " + it.t + " (" + fmt(it.prix) + " F). Je paie par Orange Money au " + OM_NUMBER + " et je vous envoie la capture de la confirmation." : "Bonjour, je souhaite être prévenu(e) de la sortie de : " + it.t + ".";
-        return '<div class="card" style="margin-top:8px"><div class="row" style="align-items:flex-start"><div class="quartier-name" style="font-size:14.5px;flex:1">' + it.t + '</div>' + (it.dispo ? "" : pBadge("BIENTÔT", "#6B5B4D")) + '</div>' +
+        var msg = it.dispo ? "Bonjour, je souhaite acheter : " + it.t + " (" + fmt(it.prix) + " F). Je paie par Orange Money au " + OM_NUMBER + " et je vous envoie la capture de la confirmation." : "Bonjour, je souhaite m'inscrire à : " + it.t + ". Merci de m'indiquer les prochaines dates et le tarif (" + fmt(it.prix) + " F).";
+        return '<div class="card" style="margin-top:8px"><div class="row" style="align-items:flex-start"><div class="quartier-name" style="font-size:14.5px;flex:1">' + it.t + '</div>' + (it.dispo ? "" : pBadge("SUR INSCRIPTION", "#6B5B4D")) + '</div>' +
           '<div style="font-size:12px;color:var(--ink-soft);margin:4px 0 10px;line-height:1.5">' + it.d + '</div><div class="row"><b style="font-family:Georgia,serif;font-size:17px">' + fmt(it.prix) + ' F</b>' +
-          '<a href="' + waLink(msg) + '" target="_blank" rel="noopener" style="text-decoration:none;font-size:12.5px;font-weight:600;color:#fff;background:var(--ink);border-radius:8px;padding:10px 14px">' + (it.dispo ? "Acheter" : "Me prévenir") + '</a></div></div>';
+          '<a href="' + waLink(msg) + '" target="_blank" rel="noopener" style="text-decoration:none;font-size:12.5px;font-weight:600;color:#fff;background:var(--ink);border-radius:8px;padding:10px 14px">' + (it.dispo ? "Acheter" : "S'inscrire") + '</a></div></div>';
       }).join("");
     }).join("") +
     '<div class="card" style="margin-top:14px"><div class="section-label" style="margin:0 0 6px">Comment payer</div><div style="font-size:12.5px;line-height:1.6;color:var(--ink-soft)">1. Touchez « Acheter » : un message WhatsApp est préparé.<br>2. Payez par <b style="color:var(--ink)">Orange Money au ' + OM_NUMBER + '</b>.<br>3. Envoyez la capture de la confirmation sur WhatsApp : le document vous est remis dès vérification du paiement.</div></div>' +
-    pNote("Paiement par Mobile Money ou virement, livraison du document par WhatsApp ou e-mail après confirmation. Les modèles de contrats sont des bases à adapter et à faire valider par un notaire ou un avocat.") +
+    pNote("Paiement par Mobile Money ou virement, livraison du document par WhatsApp ou e-mail après confirmation. Guides, modèles et fiches sont des informations générales : ils ne remplacent pas un notaire. Les modèles de contrats sont des bases à adapter et à faire valider par un notaire ou un avocat. Les formations et webinaires se déroulent en direct sur inscription : les dates vous sont communiquées par WhatsApp.") +
     shareBtn("Guides, modèles de contrats et formations sur l'immobilier au Mali : la boutique Terrimoine 👇", "Partager la boutique", "boutique");
 }
 
