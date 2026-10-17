@@ -2,3 +2,4 @@ User-agent: *
 Allow: /
 
 Sitemap: https://terrimoine.com/sitemap.xml
+Sitemap: https://terrimoine.com/en/sitemap-en.xml
