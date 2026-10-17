@@ -19,6 +19,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
 <meta name="theme-color" content="#3E2723" />
 <link rel="canonical" href="https://terrimoine.com/" />
+<link rel="alternate" hreflang="fr" href="https://terrimoine.com/" />
+<link rel="alternate" hreflang="en" href="https://terrimoine.com/en/" />
+<link rel="alternate" hreflang="x-default" href="https://terrimoine.com/" />
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebSite","name":"Terrimoine","url":"https://terrimoine.com/","inLanguage":"fr"},{"@type":"Organization","name":"Terrimoine","url":"https://terrimoine.com/","logo":"https://terrimoine.com/icons/icon-512.png","email":"boutamboura1982@gmail.com","telephone":"+22382683541","address":{"@type":"PostalAddress","streetAddress":"Hamdallaye, Rue 93, Porte 119","addressLocality":"Bamako","addressCountry":"ML"}}]}</script>
 <link rel="manifest" href="manifest.json" />
 <link rel="apple-touch-icon" href="icons/icon-192.png" />
@@ -75,6 +78,7 @@
   .minicard { background: #fff; border: 1px solid var(--paper-deep); border-radius: 10px; padding: 16px; text-align: center; }
   .minicard b { font-family: 'Courier New', monospace; font-size: 16px; color: var(--bronze); display: block; }
   .minicard small { font-size: 11px; color: var(--ink-soft); margin-top: 4px; display: block; }
+#langsw{position:fixed;top:13px;right:12px;z-index:60;font-family:'Courier New',monospace;font-size:11px;letter-spacing:1px;color:#F1EAD9;border:1px solid #A67C3D;border-radius:14px;padding:3px 9px;text-decoration:none;background:rgba(62,39,35,.9)}#langsw b{color:#A67C3D}
 </style>
 <!-- Google Analytics (chargé en arrière-plan, après le chargement de la page) -->
 <script>
@@ -93,6 +97,7 @@ window.addEventListener('load', function() {
 </script>
 </head>
 <body>
+<a id="langsw" href="/en/" hreflang="en"><b>FR</b> · EN</a>
 <div id="app"></div>
 
 <script>
@@ -756,10 +761,14 @@ var PREMIUM_PLANS = [
 ];
 var BOUTIQUE = [
   { cat: "Guides et e-books", items: [
-    { id: "g1", t: "Guide : acheter un terrain sans se faire piéger", d: "Document Word de 15 pages : titres, 8 pièges, méthode en 10 étapes, budget complet, paiement sécurisé, fiches à imprimer.", prix: 5000, dispo: true },
-    { id: "g2", t: "E-book : construire sa maison à Bamako, budget et étapes", d: "Document Word de 9 pages : prix du terrain par quartier, grille de budget à remplir avec vos devis, étapes, contrôles, contrat avec l'entrepreneur.", prix: 7500, dispo: true },
-    { id: "g3", t: "Guide : investir dans le locatif au Mali", d: "Document Word de 10 pages : rendement brut et net, loyers par quartier, exemple chiffré, gestion, impayés, fiches de calcul.", prix: 7500, dispo: true },
-    { id: "g4", t: "Guide : transmettre son patrimoine immobilier", d: "Document Word de 8 pages : inventaire, documents, héritiers, options à voir avec un notaire, fiches pratiques. Information générale.", prix: 10000, dispo: true }
+    { id: "g1", t: "Guide : acheter un terrain sans se faire piéger", d: "Guide de 85 pages (Word et PDF) avec couverture, préface et fiches : réformes foncières maliennes, rôle des acteurs (service foncier, notaire, géomètre, promoteur…), 12 pièges, méthode en 10 étapes, cas particuliers, budget, paiement sécurisé, litiges, 18 fiches à imprimer. Disponible aussi en anglais (édition anglaise complète).", prix: 5000, dispo: true },
+    { id: "g2", t: "E-book : construire sa maison à Bamako, budget et étapes", d: "Guide en cours d'amélioration. Au programme : prix du terrain par quartier, grille de budget à remplir avec vos devis, étapes, contrôles, contrat avec l'entrepreneur.", prix: 7500, dispo: false, bientot: true },
+    { id: "g3", t: "Guide : investir dans le locatif au Mali", d: "Guide en cours d'amélioration. Au programme : rendement brut et net, loyers par quartier, exemple chiffré, gestion, impayés, fiches de calcul.", prix: 7500, dispo: false, bientot: true },
+    { id: "g4", t: "Guide : transmettre son patrimoine immobilier", d: "Guide en cours d'amélioration. Au programme : inventaire, documents, héritiers, options à voir avec un notaire, fiches pratiques.", prix: 10000, dispo: false, bientot: true },
+    { id: "g5", t: "Guide : louer un logement à Bamako sans mauvaise surprise", d: "Guide en cours d'amélioration. Au programme : budget, pièges, vérification du bailleur, bail, caution, état des lieux, départ, fiches.", prix: 5000, dispo: false, bientot: true },
+    { id: "g6", t: "Guide : vendre son terrain ou sa maison au Mali", d: "Guide en cours d'amélioration. Au programme : papiers, prix, intermédiaires, acheteurs sérieux et arnaques, notaire, paiement, fiches.", prix: 5000, dispo: false, bientot: true },
+    { id: "g7", t: "Guide : investir au Mali depuis la diaspora", d: "Guide en cours d'amélioration. Au programme : cadre écrit, procuration, acheter, construire et gérer à distance, arnaques, calendrier 12 mois.", prix: 7500, dispo: false, bientot: true },
+    { id: "g8", t: "Guide : estimer la valeur d'un terrain ou d'une maison", d: "Guide en cours d'amélioration. Au programme : méthode des comparables, exemple chiffré, fiabilité, quand appeler un expert, fiches de calcul.", prix: 5000, dispo: false, bientot: true }
   ] },
   { cat: "Modèles de contrats", items: [
     { id: "m1", t: "Modèle de contrat de bail d'habitation", d: "Document Word modifiable de 7 pages : contrat en 17 articles, état des lieux, quittance et notice d'utilisation.", prix: 3000, dispo: true },
@@ -924,10 +933,10 @@ function proBoutique() {
   return '<div class="sub">Guides, modèles de contrats et formations pour investir et transmettre en confiance.</div>' +
     BOUTIQUE.map(function(c) {
       return '<div class="section-label" style="margin-top:14px">' + c.cat + '</div>' + c.items.map(function(it) {
-        var msg = it.dispo ? "Bonjour, je souhaite acheter : " + it.t + " (" + fmt(it.prix) + " F). Je paie par Orange Money au " + OM_NUMBER + " et je vous envoie la capture de la confirmation." : "Bonjour, je souhaite m'inscrire à : " + it.t + ". Merci de m'indiquer les prochaines dates et le tarif (" + fmt(it.prix) + " F).";
-        return '<div class="card" style="margin-top:8px"><div class="row" style="align-items:flex-start"><div class="quartier-name" style="font-size:14.5px;flex:1">' + it.t + '</div>' + (it.dispo ? "" : pBadge("SUR INSCRIPTION", "#6B5B4D")) + '</div>' +
-          '<div style="font-size:12px;color:var(--ink-soft);margin:4px 0 10px;line-height:1.5">' + it.d + '</div><div class="row"><b style="font-family:Georgia,serif;font-size:17px">' + fmt(it.prix) + ' F</b>' +
-          '<a href="' + waLink(msg) + '" target="_blank" rel="noopener" style="text-decoration:none;font-size:12.5px;font-weight:600;color:#fff;background:var(--ink);border-radius:8px;padding:10px 14px">' + (it.dispo ? "Acheter" : "S'inscrire") + '</a></div></div>';
+        var msg = it.bientot ? "Bonjour, prévenez-moi de la parution de : " + it.t + "." : it.dispo ? "Bonjour, je souhaite acheter : " + it.t + " (" + fmt(it.prix) + " F). Je paie par Orange Money au " + OM_NUMBER + " et je vous envoie la capture de la confirmation." : "Bonjour, je souhaite m'inscrire à : " + it.t + ". Merci de m'indiquer les prochaines dates et le tarif (" + fmt(it.prix) + " F).";
+        return '<div class="card" style="margin-top:8px"><div class="row" style="align-items:flex-start"><div class="quartier-name" style="font-size:14.5px;flex:1">' + it.t + '</div>' + (it.bientot ? pBadge("EN COURS", "#6B5B4D") : it.dispo ? "" : pBadge("SUR INSCRIPTION", "#6B5B4D")) + '</div>' +
+          '<div style="font-size:12px;color:var(--ink-soft);margin:4px 0 10px;line-height:1.5">' + it.d + '</div><div class="row">' + (it.bientot ? '<span style="font-size:12.5px;color:var(--ink-soft)">Bientôt disponible</span>' : '<b style="font-family:Georgia,serif;font-size:17px">' + fmt(it.prix) + ' F</b>') +
+          '<a href="' + waLink(msg) + '" target="_blank" rel="noopener" style="text-decoration:none;font-size:12.5px;font-weight:600;color:#fff;background:var(--ink);border-radius:8px;padding:10px 14px">' + (it.bientot ? "Me prévenir" : it.dispo ? "Acheter" : "S'inscrire") + '</a></div></div>';
       }).join("");
     }).join("") +
     '<div class="card" style="margin-top:14px"><div class="section-label" style="margin:0 0 6px">Comment payer</div><div style="font-size:12.5px;line-height:1.6;color:var(--ink-soft)">1. Touchez « Acheter » : un message WhatsApp est préparé.<br>2. Payez par <b style="color:var(--ink)">Orange Money au ' + OM_NUMBER + '</b>.<br>3. Envoyez la capture de la confirmation sur WhatsApp : le document vous est remis dès vérification du paiement.</div></div>' +
