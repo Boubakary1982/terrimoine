@@ -1,0 +1,98 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><title>Land Value Simulator for Bamako and Price Scenarios | Terrimoine</title>
+<meta name="description" content="Estimate the value of land in Bamako by neighbourhood and area, then test three growth scenarios over 3 to 15 years. Free, Terrimoine Q3 2026 data."><link rel="canonical" href="https://terrimoine.com/en/land-value-simulator-bamako.html">
+<link rel="alternate" hreflang="en" href="https://terrimoine.com/en/land-value-simulator-bamako.html"><link rel="alternate" hreflang="fr" href="https://terrimoine.com/simulateur-valeur-terrain-bamako.html"><link rel="alternate" hreflang="x-default" href="https://terrimoine.com/simulateur-valeur-terrain-bamako.html">
+<meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#3E2723">
+<meta property="og:type" content="article"><meta property="og:site_name" content="Terrimoine"><meta property="og:locale" content="en_US">
+<meta property="og:title" content="Land Value Simulator for Bamako and Price Scenarios | Terrimoine"><meta property="og:description" content="Estimate the value of land in Bamako by neighbourhood and area, then test three growth scenarios over 3 to 15 years. Free, Terrimoine Q3 2026 data."><meta property="og:url" content="https://terrimoine.com/en/land-value-simulator-bamako.html">
+<meta property="og:image" content="https://terrimoine.com/og-terrimoine.png"><meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="/icons/icon-192.png">
+<script type="application/ld+json">[{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://terrimoine.com/en/"}, {"@type": "ListItem", "position": 2, "name": "Value simulator", "item": "https://terrimoine.com/en/land-value-simulator-bamako.html"}]}, {"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "How does the simulator estimate the land's value?", "acceptedAnswer": {"@type": "Answer", "text": "It multiplies the median price per m² of the chosen neighbourhood (Terrimoine Q3 2026 report) by the area you enter, then applies the uncertainty margin you indicate."}}, {"@type": "Question", "name": "Are the three scenarios forecasts?", "acceptedAnswer": {"@type": "Answer", "text": "No. They are annual growth rates you can edit. The starting values (2, 5 and 8%) are calculation examples, not Terrimoine forecasts."}}, {"@type": "Question", "name": "Why an uncertainty margin?", "acceptedAnswer": {"@type": "Answer", "text": "Because a neighbourhood median price does not tell the price of a specific plot. The default margin is ±20%, you can change it."}}, {"@type": "Question", "name": "Does the result replace a valuation?", "acceptedAnswer": {"@type": "Answer", "text": "No. For a firm price, call on a professional valuer or a notary. The simulator gives an order of magnitude."}}]}]</script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-3SSM8OZ9TB"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-3SSM8OZ9TB');</script>
+<style>
+:root{--ink:#3E2723;--bronze:#A67C3D;--paper:#F1EAD9;--deep:#E6DBC3;--soft:#6B5B4D}
+*{box-sizing:border-box}body{margin:0;font-family:'Segoe UI',Arial,sans-serif;background:var(--paper);color:var(--ink);line-height:1.6;font-size:16px}
+header{background:var(--ink);padding:14px 18px;border-bottom:1px solid var(--bronze)}
+header a{color:var(--paper);text-decoration:none;font-family:Georgia,serif;font-size:21px}header small{display:block;font-family:'Courier New',monospace;font-size:10px;letter-spacing:2px;color:var(--bronze)}
+main{max-width:760px;margin:0 auto;padding:18px 18px 40px}
+nav.bc{font-size:13px;color:var(--soft);margin-bottom:10px}nav.bc a{color:var(--soft)}
+h1{font-family:Georgia,serif;font-weight:400;font-size:27px;line-height:1.25;margin:6px 0 10px}
+h2{font-family:Georgia,serif;font-weight:400;font-size:20px;margin:26px 0 8px}
+p{margin:0 0 12px}.lead{font-size:17px;color:#4e3f36}
+.card{background:#fff;border:1px solid var(--deep);border-radius:10px;padding:14px 16px;margin:12px 0}
+.kpis{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px 0}
+.kpi{background:#fff;border:1px solid var(--deep);border-radius:10px;padding:12px}.kpi b{display:block;font-family:Georgia,serif;font-size:21px;color:var(--ink)}.kpi span{font-size:12.5px;color:var(--soft)}
+table{width:100%;border-collapse:collapse;background:#fff;border:1px solid var(--deep);border-radius:10px;overflow:hidden;font-size:14.5px}
+th,td{padding:9px 10px;text-align:left;border-bottom:1px solid var(--deep)}th{background:var(--deep);font-size:12.5px;text-transform:uppercase;letter-spacing:.5px}td.n,th.n{text-align:right;white-space:nowrap}
+a{color:#7A4B12}.btn{display:block;text-align:center;background:var(--ink);color:#fff!important;text-decoration:none;font-weight:700;border-radius:10px;padding:15px;margin:14px 0}
+.btn.alt{background:none;color:var(--ink)!important;border:1px solid var(--bronze)}
+.note{font-size:13px;color:var(--soft);background:#FBF1DC;border:1px solid #E5C98A;border-radius:8px;padding:10px 12px;margin:14px 0}
+details{background:#fff;border:1px solid var(--deep);border-radius:10px;padding:10px 14px;margin:8px 0}summary{cursor:pointer;font-weight:600}
+ul.l{padding-left:18px}ul.l li{margin:4px 0}
+footer{background:var(--ink);color:var(--paper);padding:22px 18px;font-size:14px}footer a{color:#E3C58A;display:inline-block;margin:3px 10px 3px 0}footer .w{max-width:760px;margin:0 auto}
+header{display:flex;justify-content:space-between;align-items:center}.lang{color:var(--paper);font-size:14px}.lang a{font-size:14px;color:#E3C58A}
+</style></head><body>
+<header><a href="/en/"><small>REAL ESTATE · HERITAGE · NEWS</small>Terrimoine</a><span class="lang"><a href="/en/land-value-simulator-bamako.html" hreflang="fr">FR</a> · <b>EN</b></span></header>
+<main><nav class="bc"><a href="/en/">Home</a> › Value simulator</nav><h1>Land value simulator for Bamako and price scenarios</h1>
+<p class="lead">Choose your neighbourhood and the area: the simulator estimates the land's value from the median price recorded by Terrimoine (Q3 2026), then shows what it would become in three growth scenarios <strong>that you define</strong>.</p>
+<style>
+.sim label{display:block;font-size:13.5px;font-weight:600;margin:12px 0 4px}
+.sim input,.sim select{width:100%;font-size:17px;padding:11px;border:1px solid #cdbf9f;border-radius:8px;background:#fff;color:#3E2723;font-family:inherit}
+.sim .g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}.sim .g3 label{font-size:12.5px}
+.sim .big{font-family:Georgia,serif;font-size:26px}
+#res table{font-size:13px}#res th,#res td{padding:8px 5px}#res th{font-size:11px;letter-spacing:0}.sim small{color:#6B5B4D}
+</style>
+<div class="card sim">
+<label for="q">Neighbourhood</label><select id="q"></select>
+<label for="s">Plot area (m²)</label><input id="s" type="number" inputmode="numeric" min="50" max="5000" value="300">
+<label for="h">Projection horizon</label><select id="h"><option value="3">3 years</option><option value="5" selected>5 years</option><option value="10">10 years</option><option value="15">15 years</option></select>
+<label>Annual growth assumptions (% per year), editable</label>
+<div class="g3"><div><label for="r1">Prudent</label><input id="r1" type="number" inputmode="decimal" value="2" step="0.5"></div><div><label for="r2">Central</label><input id="r2" type="number" inputmode="decimal" value="5" step="0.5"></div><div><label for="r3">Dynamic</label><input id="r3" type="number" inputmode="decimal" value="8" step="0.5"></div></div>
+<label for="m">Uncertainty margin on the current price (±%)</label><input id="m" type="number" inputmode="numeric" min="0" max="60" value="20">
+<small>These rates and this margin are editable calculation assumptions. They are not Terrimoine forecasts.</small>
+</div>
+<div class="card sim" id="res" aria-live="polite"></div>
+<div id="chart"></div>
+<script>
+(function(){
+var D=[["Hamdallaye ACI", 525000], ["Bamako Coura", 200000], ["Badalabougou", 200000], ["Quartier du Fleuve", 200000], ["Baco Djicoroni", 200000], ["Sotuba", 150000], ["Sébénikoro", 97500], ["Faladié", 60000], ["Kalaban Coura", 60000], ["Lafiabougou", 60000], ["Yirimadio", 30000], ["Sirakoro", 30000]];
+function $(i){return document.getElementById(i)}
+function f(n){return Math.round(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g,",")}
+var qs=$("q");D.forEach(function(x,i){var o=document.createElement("option");o.value=i;o.textContent=x[0]+" ("+f(x[1])+" F/m²)";qs.appendChild(o)});
+var COL=["#6B5B4D","#A67C3D","#3E2723"],NAM=["Prudent","Central","Dynamic"];
+function calc(){
+ var pm=D[+qs.value][1],s=Math.max(0,+$("s").value||0),H=+$("h").value,m=Math.min(100,Math.max(0,+$("m").value||0))/100;
+ var r=[+$("r1").value||0,+$("r2").value||0,+$("r3").value||0];
+ var v0=pm*s,lo=v0*(1-m),hi=v0*(1+m);
+ var h='<div><small>Estimated value today</small><div class="big">'+f(v0)+' F CFA</div><small>Between '+f(lo)+' and '+f(hi)+' F CFA (neighbourhood median price × area, ±'+Math.round(m*100)+'%). Excluding transfer, title and notary fees.</small></div>';
+ h+='<div style="overflow-x:auto;margin-top:14px"><table><thead><tr><th>Scenario</th><th class="n">Value in '+H+' years</th><th class="n">Gain</th></tr></thead><tbody>';
+ r.forEach(function(x,i){var k=Math.pow(1+x/100,H),v=v0*k;h+='<tr><td>'+NAM[i]+'<br><small>'+x.toString()+'% per year</small></td><td class="n" style="white-space:normal">'+f(v)+' F<br><small>'+f(lo*k)+' – '+f(hi*k)+'</small></td><td class="n">'+(v>=v0?"+":"−")+f(Math.abs(v-v0))+' F</td></tr>'});
+ h+='</tbody></table></div><p style="font-size:13px;color:#6B5B4D;margin:8px 0 0">Future value = current value × (1 + growth)^years. No inflation, fee or tax is deducted. The small line shows the range linked to the uncertainty margin.</p>';
+ $("res").innerHTML=h;
+ var W=600,Ht=260,pl=14,pr=14,pt=14,pb=34,vmax=0,vmin=1e18,series=[];
+ r.forEach(function(x){var a=[];for(var t=0;t<=H;t++){a.push(v0*Math.pow(1+x/100,t))}series.push(a);a.forEach(function(v){vmax=Math.max(vmax,v);vmin=Math.min(vmin,v)})});
+ if(vmax<=vmin)vmax=vmin+1;
+ function X(t){return pl+(W-pl-pr)*t/H}function Y(v){return pt+(Ht-pt-pb)*(1-(v-vmin)/(vmax-vmin))}
+ var svg='';
+ series.forEach(function(a,i){svg+='<polyline fill="none" stroke="'+COL[i]+'" stroke-width="3" points="'+a.map(function(v,t){return X(t).toFixed(0)+","+Y(v).toFixed(0)}).join(" ")+'"/>'});
+ for(var t=0;t<=H;t+=(H>=10?5:1)){svg+='<text x="'+X(t).toFixed(0)+'" y="'+(Ht-10)+'" font-size="14" text-anchor="middle" fill="#6B5B4D">'+(t===0?"Today":t+" yrs")+'</text>'}
+ var leg=NAM.map(function(n,i){return '<span style="color:'+COL[i]+'">■</span> '+n+' ('+r[i].toString()+'%)'}).join(" · ");
+ $("chart").innerHTML='<svg viewBox="0 0 '+W+' '+Ht+'" role="img" aria-label="Land value under three scenarios" style="width:100%;height:auto;background:#fff;border:1px solid #E6DBC3;border-radius:10px"><title>Land value under three scenarios</title>'+svg+'</svg><p style="font-size:12.5px;color:#6B5B4D;margin-top:4px">'+leg+'</p>';
+}
+["q","s","h","r1","r2","r3","m"].forEach(function(i){$(i).addEventListener("input",calc);$(i).addEventListener("change",calc)});
+calc();
+})();
+</script>
+
+<div class="note"><strong>How to read this result.</strong> The current value is an estimate from a neighbourhood median: the real price of a plot depends on the street, access, title and negotiation. The three scenarios are calculation assumptions: Terrimoine does not forecast prices, and will publish a projection only with sufficient real history.</div>
+<a class="btn" href="/en/land-transfer-titling-costs-mali.html">Calculate the total purchase cost (fees, notary, title)</a>
+<a class="btn alt" href="/en/bamako-market-report.html">Read the Bamako market report, Q3 2026</a>
+<h2>What is this simulator for?</h2>
+<ul class="l"><li>Estimate the order of magnitude of a plot before visiting it.</li><li>Compare two neighbourhoods on an equal budget.</li><li>See, over 3 to 15 years, the effect of a prudent or dynamic rise on your wealth.</li><li>Prepare a discussion with a notary, a bank or a professional.</li></ul>
+<p><a href="/en/bamako-property-prices.html">See the prices of the 12 neighbourhoods</a> · <a href="/en/rental-yield-simulator-bamako.html">Rental yield simulator</a> · <a href="/en/check-land-before-buying-mali.html">Check land before buying</a></p><h2>Frequently asked questions</h2><details><summary>How does the simulator estimate the land&#x27;s value?</summary><p style="margin-top:8px">It multiplies the median price per m² of the chosen neighbourhood (Terrimoine Q3 2026 report) by the area you enter, then applies the uncertainty margin you indicate.</p></details><details><summary>Are the three scenarios forecasts?</summary><p style="margin-top:8px">No. They are annual growth rates you can edit. The starting values (2, 5 and 8%) are calculation examples, not Terrimoine forecasts.</p></details><details><summary>Why an uncertainty margin?</summary><p style="margin-top:8px">Because a neighbourhood median price does not tell the price of a specific plot. The default margin is ±20%, you can change it.</p></details><details><summary>Does the result replace a valuation?</summary><p style="margin-top:8px">No. For a firm price, call on a professional valuer or a notary. The simulator gives an order of magnitude.</p></details>
+<div class="card" style="background:#3E2723;color:#F1EAD9"><strong>Get the report every quarter</strong><br><span style="font-size:14px">The free report and price alerts, on WhatsApp. Unsubscribe at any time.</span><a class="btn" style="background:#A67C3D;margin-bottom:0" href="/en/#alertes">Get the report and alerts</a></div>
+<div class="note">Terrimoine's figures are indicative. They do not replace the advice of a notary, a professional valuer or a surveyor. See our <a href="/en/methodology.html">methodology</a>.</div>
+<a class="btn alt" href="/en/#services">A question? Send a request to the Terrimoine team</a>
+</main>
+<footer><div class="w"><strong>Terrimoine</strong> · Malian real estate, with confidence<br><br><a href="/en/bamako-property-prices.html">Prices by neighbourhood</a><a href="/en/mortgage-calculator-mali.html">Loan calculator</a><a href="/en/building-materials-quote-bamako.html">Materials quote</a><a href="/en/land-transfer-titling-costs-mali.html">Titling costs</a><a href="/en/rental-yield-simulator-bamako.html">Rental yield</a><a href="/en/check-land-before-buying-mali.html">Check land</a><a href="/en/property-tax-simulator-mali.html">Property taxes</a><a href="/en/guides.html">Guides</a><a href="/en/verified-listings.html">Verified listings</a><a href="/en/methodology.html">Methodology</a><a href="/en/about.html">About</a><br><br>Hamdallaye, Rue 93, Porte 119, Bamako · WhatsApp +223 82 68 35 41 · GKIMMO +223 76 13 92 98 · boutamboura1982@gmail.com<br><a href="/en/privacy.html">Privacy</a></div></footer>
+</body></html>
