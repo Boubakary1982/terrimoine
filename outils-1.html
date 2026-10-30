@@ -1,0 +1,526 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Boîte à outils Terrimoine : surfaces, reçus, quittances, checklist, FCFA/EUR, étude de marché</title>
+<meta name="description" content="Six outils gratuits pour le foncier et l'immobilier au Mali : surface et prix au m², reçu de paiement, quittance de loyer, checklist d'achat de terrain, convertisseur FCFA/EUR, étude de marché par comparables.">
+<style>
+:root{--bg:#faf5ec;--card:#fff;--ink:#3b2722;--mut:#7a6a5d;--bronze:#a67c3d;--bronze-d:#86602a;--line:#e5d8c3;--soft:#f3e9d8;--ok:#2f7d4f;--bad:#b3392d}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif}
+.wrap{max-width:760px;margin:0 auto;padding:0 16px}
+header.site{background:var(--ink);color:#f5e6cf;padding:22px 0 18px}
+header.site .brand{letter-spacing:.3em;font-size:12px;font-weight:700;color:var(--bronze)}
+header.site h1{font:700 26px/1.2 Georgia,"Times New Roman",serif;margin:8px 0 6px}
+header.site p{margin:0;color:#d9c9b0;font-size:15px}
+nav.tabs{display:flex;gap:8px;flex-wrap:wrap;padding:14px 16px;max-width:760px;margin:0 auto;scrollbar-width:thin}
+nav.tabs button{flex:0 0 auto;border:1px solid var(--line);background:var(--card);color:var(--ink);padding:10px 14px;border-radius:22px;font:600 14px system-ui;cursor:pointer;white-space:nowrap}
+nav.tabs button[aria-selected=true]{background:var(--bronze);border-color:var(--bronze);color:#fff}
+.tool{display:none}.tool.active{display:block}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px;margin:0 0 16px}
+h2{font:700 22px/1.25 Georgia,serif;margin:6px 0 4px}
+h3{font:700 17px/1.3 Georgia,serif;margin:0 0 10px;color:var(--bronze-d)}
+.lead{color:var(--mut);margin:0 0 14px;font-size:15px}
+label{display:block;font-size:13px;font-weight:600;color:var(--mut);margin:12px 0 4px}
+input,select,textarea{width:100%;font:16px system-ui;padding:11px 12px;border:1px solid var(--line);border-radius:10px;background:#fff;color:var(--ink)}
+input:focus,select:focus,textarea:focus{outline:2px solid var(--bronze);border-color:var(--bronze)}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:480px){.row.r2m{grid-template-columns:1fr}}
+.res{background:var(--soft);border-radius:10px;padding:12px 14px;margin-top:14px;font-size:15px}
+.res b{color:var(--ink)}.res .big{font:700 24px Georgia,serif;color:var(--bronze-d);display:block;margin:2px 0}
+.err{color:var(--bad);font-size:14px;margin-top:8px}
+.note{font-size:13px;color:var(--mut);margin-top:10px}
+.btn{display:inline-block;border:0;background:var(--bronze);color:#fff;font:700 15px system-ui;padding:12px 18px;border-radius:10px;cursor:pointer;margin:14px 8px 0 0}
+.btn.alt{background:#fff;color:var(--bronze-d);border:1px solid var(--bronze)}
+.hint{background:#fff8e8;border:1px solid #ecd9a8;border-radius:10px;padding:10px 12px;font-size:14px;margin-top:12px}
+table.cmp{width:100%;border-collapse:collapse;font-size:15px;margin-top:6px}
+table.cmp td,table.cmp th{padding:8px 6px;border-bottom:1px solid var(--line);text-align:left}
+.prog{height:12px;background:var(--soft);border-radius:8px;overflow:hidden;margin:6px 0 4px}
+.prog i{display:block;height:100%;width:0;background:var(--ok);transition:width .25s}
+.ck{display:flex;gap:12px;align-items:flex-start;padding:10px 0;border-bottom:1px solid var(--line);cursor:pointer}
+.ck input{width:22px;height:22px;flex:0 0 22px;margin-top:2px;accent-color:var(--bronze)}
+.ck span{font-size:15.5px}.ck small{display:block;color:var(--mut);font-size:13px}
+.ck input:checked+span{color:var(--mut);text-decoration:line-through}
+.doc{border:2px solid var(--ink);padding:22px 20px;border-radius:4px;background:#fff;font:15px/1.7 Georgia,"Times New Roman",serif}
+.doc h4{font:700 20px Georgia,serif;text-align:center;letter-spacing:.06em;text-transform:uppercase;margin:0 0 14px}
+.doc .mt{margin-top:18px}.doc .sig{display:flex;justify-content:space-between;gap:20px;margin-top:34px}
+.doc .sig div{flex:1;border-top:1px solid #000;padding-top:6px;font-size:13px;text-align:center}
+.doc .warn{font-size:12.5px;color:#555;margin-top:18px;border-top:1px dashed #999;padding-top:8px}
+footer.site{font-size:13px;color:var(--mut);padding:8px 16px 40px;max-width:760px;margin:0 auto}
+@media print{
+  body{background:#fff}
+  .nop,header.site,nav.tabs,footer.site{display:none!important}
+  .tool{display:none!important}.tool.active{display:block!important}
+  .panel{border:0;padding:0;margin:0}
+  .doc{border:2px solid #000}
+}
+</style>
+</head>
+<body>
+<header class="site nop"><div class="wrap">
+  <div class="brand">TERRIMOINE</div>
+  <h1>Boîte à outils</h1>
+  <p>Six outils gratuits pour le foncier et l'immobilier au Mali. Tout se calcule sur votre téléphone : aucune donnée n'est envoyée.</p>
+</div></header>
+
+<nav class="tabs nop" role="tablist" aria-label="Outils">
+  <button role="tab" data-t="surface">Surface &amp; prix au m²</button>
+  <button role="tab" data-t="recu">Reçu de paiement</button>
+  <button role="tab" data-t="quittance">Quittance de loyer</button>
+  <button role="tab" data-t="checklist">Checklist d'achat</button>
+  <button role="tab" data-t="devise">FCFA ⇄ EUR</button>
+  <button role="tab" data-t="marche">Étude de marché</button>
+</nav>
+
+<main class="wrap">
+
+<!-- 1. SURFACE -->
+<section class="tool" id="t-surface">
+  <div class="panel">
+    <h2>Surface &amp; prix au m²</h2>
+    <p class="lead">Convertissez les unités, estimez la surface d'un terrain à partir de ses côtés, puis comparez deux offres.</p>
+
+    <h3>1. Convertir une surface</h3>
+    <div class="row r2m">
+      <div><label for="cv">Surface</label><input id="cv" type="number" inputmode="decimal" min="0" placeholder="ex. 600"></div>
+      <div><label for="cu">Unité</label><select id="cu"><option value="1">mètres carrés (m²)</option><option value="100">ares (a)</option><option value="10000">hectares (ha)</option></select></div>
+    </div>
+    <div class="res" id="cvRes">Saisissez une surface.</div>
+    <p class="note">1 hectare = 100 ares = 10 000 m². Le centiare (ca) vaut 1 m².</p>
+  </div>
+
+  <div class="panel">
+    <h3>2. Estimer la surface depuis les côtés</h3>
+    <label for="sh">Forme du terrain</label>
+    <select id="sh"><option value="rect">Rectangle</option><option value="tri">Triangle (3 côtés)</option><option value="quad">Quadrilatère (4 côtés + 1 diagonale)</option></select>
+    <div id="shF"></div>
+    <div class="res" id="shRes">Saisissez les mesures en mètres.</div>
+    <button class="btn alt" id="useArea" type="button" style="display:none">Utiliser cette surface plus bas</button>
+    <p class="note">Estimation à partir de mesures que vous avez prises. Seul un géomètre-expert établit la surface officielle d'une parcelle.</p>
+  </div>
+
+  <div class="panel">
+    <h3>3. Prix au m² et comparaison de deux offres</h3>
+    <div class="row r2m">
+      <div><h3 style="margin-top:6px">Offre A</h3>
+        <label for="pa">Prix demandé (FCFA)</label><input id="pa" type="number" inputmode="numeric" min="0" placeholder="ex. 12000000">
+        <label for="sa">Surface (m²)</label><input id="sa" type="number" inputmode="decimal" min="0" placeholder="ex. 600"></div>
+      <div><h3 style="margin-top:6px">Offre B</h3>
+        <label for="pb">Prix demandé (FCFA)</label><input id="pb" type="number" inputmode="numeric" min="0" placeholder="ex. 9500000">
+        <label for="sb">Surface (m²)</label><input id="sb" type="number" inputmode="decimal" min="0" placeholder="ex. 400"></div>
+    </div>
+    <div class="res" id="cmpRes">Saisissez au moins une offre.</div>
+    <p class="note">Le prix au m² est un repère, pas un jugement. L'emplacement, l'état des papiers et l'accès (route, eau, électricité) changent la valeur d'un terrain.</p>
+  </div>
+</section>
+
+<!-- 2. REÇU -->
+<section class="tool" id="t-recu">
+  <div class="panel nop">
+    <h2>Reçu de paiement</h2>
+    <p class="lead">Chaque versement doit laisser une trace écrite : qui a payé, combien, pour quoi, et pour quel terrain. Remplissez, vérifiez l'aperçu, imprimez en deux exemplaires.</p>
+    <div class="row r2m">
+      <div><label for="r_payeur">Nom de celui qui paie</label><input id="r_payeur" placeholder="Nom et prénom"></div>
+      <div><label for="r_benef">Nom de celui qui reçoit</label><input id="r_benef" placeholder="Nom et prénom"></div>
+    </div>
+    <div class="row r2m">
+      <div><label for="r_montant">Montant (FCFA)</label><input id="r_montant" type="number" inputmode="numeric" min="0" placeholder="ex. 4000000"></div>
+      <div><label for="r_objet">Objet du versement</label><select id="r_objet"><option value="d'acompte">Acompte</option><option value="de paiement partiel">Paiement partiel</option><option value="de solde du prix">Solde du prix</option><option value="de frais">Frais</option></select></div>
+    </div>
+    <label for="r_terrain">Terrain concerné (lieu, quartier, n° de lot ou de titre si connu)</label>
+    <input id="r_terrain" placeholder="ex. Lot 123, Sébénikoro, Bamako">
+    <div class="row r2m">
+      <div><label for="r_mode">Mode de paiement</label><select id="r_mode"><option>espèces</option><option>virement bancaire</option><option>Orange Money</option><option>Moov Money</option><option>chèque</option></select></div>
+      <div><label for="r_ref">Référence (n° de virement, de chèque, de transaction)</label><input id="r_ref" placeholder="facultatif"></div>
+    </div>
+    <div class="row r2m">
+      <div><label for="r_total">Prix total convenu (FCFA, facultatif)</label><input id="r_total" type="number" inputmode="numeric" min="0"></div>
+      <div><label for="r_deja">Déjà versé avant ce reçu (FCFA)</label><input id="r_deja" type="number" inputmode="numeric" min="0" placeholder="0"></div>
+    </div>
+    <div class="row r2m">
+      <div><label for="r_lieu">Fait à</label><input id="r_lieu" value="Bamako"></div>
+      <div><label for="r_date">Date</label><input id="r_date" type="date"></div>
+    </div>
+    <label for="r_temoin">Témoin (facultatif)</label><input id="r_temoin" placeholder="Nom et prénom">
+  </div>
+  <div class="panel">
+    <div class="doc printarea" id="r_doc"></div>
+    <button class="btn nop" type="button" onclick="window.print()">Imprimer / Enregistrer en PDF</button>
+    <p class="note nop">Sur téléphone : touchez « Imprimer », puis choisissez « Enregistrer au format PDF ».</p>
+  </div>
+</section>
+
+<!-- 3. QUITTANCE -->
+<section class="tool" id="t-quittance">
+  <div class="panel nop">
+    <h2>Quittance de loyer</h2>
+    <p class="lead">Pour les bailleurs et les administrateurs de biens : une quittance claire, avec le montant en lettres.</p>
+    <div class="row r2m">
+      <div><label for="q_bail">Bailleur (ou son mandataire)</label><input id="q_bail" placeholder="Nom et prénom ou raison sociale"></div>
+      <div><label for="q_loc">Locataire</label><input id="q_loc" placeholder="Nom et prénom"></div>
+    </div>
+    <label for="q_bien">Bien loué (adresse, désignation)</label>
+    <input id="q_bien" placeholder="ex. Appartement 2 pièces, ACI 2000, Bamako">
+    <div class="row r2m">
+      <div><label for="q_mois">Mois concerné</label><select id="q_mois"></select></div>
+      <div><label for="q_an">Année</label><input id="q_an" type="number" inputmode="numeric" min="2000" max="2100"></div>
+    </div>
+    <div class="row r2m">
+      <div><label for="q_loyer">Loyer (FCFA)</label><input id="q_loyer" type="number" inputmode="numeric" min="0" placeholder="ex. 150000"></div>
+      <div><label for="q_charges">Charges (FCFA)</label><input id="q_charges" type="number" inputmode="numeric" min="0" placeholder="0"></div>
+    </div>
+    <div class="row r2m">
+      <div><label for="q_mode">Mode de paiement</label><select id="q_mode"><option>espèces</option><option>virement bancaire</option><option>Orange Money</option><option>Moov Money</option><option>chèque</option></select></div>
+      <div><label for="q_date">Date de paiement</label><input id="q_date" type="date"></div>
+    </div>
+    <label for="q_lieu">Fait à</label><input id="q_lieu" value="Bamako">
+  </div>
+  <div class="panel">
+    <div class="doc printarea" id="q_doc"></div>
+    <button class="btn nop" type="button" onclick="window.print()">Imprimer / Enregistrer en PDF</button>
+  </div>
+</section>
+
+<!-- 4. CHECKLIST -->
+<section class="tool" id="t-checklist">
+  <div class="panel">
+    <h2>Checklist d'achat de terrain</h2>
+    <p class="lead nop">Cochez au fur et à mesure. Vos coches restent sur cet appareil. Ne versez rien tant que les premières cases ne sont pas cochées.</p>
+    <div class="prog nop"><i id="pg"></i></div>
+    <div class="note nop" id="pgTxt"></div>
+    <div class="printarea" id="ckList"></div>
+    <button class="btn alt nop" type="button" id="ckReset">Tout décocher</button>
+    <button class="btn nop" type="button" onclick="window.print()">Imprimer la liste</button>
+    <div class="hint nop">Cette liste est un guide de bon sens. Elle ne remplace pas le contrôle d'un notaire, qui vérifie le titre et rédige l'acte.</div>
+  </div>
+</section>
+
+<!-- 5. DEVISE -->
+<section class="tool" id="t-devise">
+  <div class="panel">
+    <h2>FCFA ⇄ Euro</h2>
+    <p class="lead">Le franc CFA est lié à l'euro par une parité fixe : 1 € = 655,957 FCFA. Utile pour budgéter un achat depuis l'étranger.</p>
+    <div class="row r2m">
+      <div><label for="d_m">Montant</label><input id="d_m" type="number" inputmode="decimal" min="0" placeholder="ex. 20000"></div>
+      <div><label for="d_s">Sens</label><select id="d_s"><option value="e2f">Euros → FCFA</option><option value="f2e">FCFA → Euros</option></select></div>
+    </div>
+    <div class="res" id="d_res">Saisissez un montant.</div>
+  </div>
+  <div class="panel">
+    <h3>Combien envoyer pour recevoir une somme au Mali ?</h3>
+    <label for="x_need">Somme à recevoir (FCFA)</label>
+    <input id="x_need" type="number" inputmode="numeric" min="0" placeholder="ex. 5000000">
+    <div class="row r2m">
+      <div><label for="x_rate">Taux appliqué par votre service de transfert (FCFA pour 1 €)</label><input id="x_rate" type="number" inputmode="decimal" step="0.001" placeholder="655.957"></div>
+      <div><label for="x_fee">Frais de transfert (% du montant envoyé)</label><input id="x_fee" type="number" inputmode="decimal" min="0" step="0.01" placeholder="0"></div>
+    </div>
+    <div class="res" id="x_res">Saisissez la somme à recevoir.</div>
+    <p class="note">Les taux et frais varient selon le service utilisé. Demandez-les à votre banque ou service de transfert avant d'envoyer, et comparez. Pour une autre devise que l'euro, utilisez le taux affiché par votre service.</p>
+  </div>
+</section>
+
+<!-- 6. ETUDE DE MARCHE -->
+<section class="tool" id="t-marche">
+  <div class="panel nop">
+    <h2>Étude de marché par comparables</h2>
+    <p class="lead">Relevez 5 à 15 annonces comparables (même quartier, même type de bien) et saisissez-les. L'outil calcule le prix au m² médian, la fourchette habituelle et signale les prix hors norme.</p>
+    <div class="row r2m">
+      <div><label for="m_zone">Zone ou quartier étudié</label><input id="m_zone" placeholder="ex. Sébénikoro, Bamako"></div>
+      <div><label for="m_type">Type de bien</label><select id="m_type"><option>Terrain</option><option>Maison / villa</option><option>Appartement</option><option>Local commercial</option></select></div>
+    </div>
+    <h3 style="margin-top:20px">Ajouter une annonce</h3>
+    <div class="row r2m">
+      <div><label for="m_p">Prix annoncé (FCFA)</label><input id="m_p" type="number" inputmode="numeric" min="0" placeholder="ex. 12000000"></div>
+      <div><label for="m_s">Surface (m²)</label><input id="m_s" type="number" inputmode="decimal" min="0" placeholder="ex. 600"></div>
+    </div>
+    <label for="m_l">Repère (facultatif : source, quartier, date)</label>
+    <input id="m_l" placeholder="ex. annonce Facebook du 12/10">
+    <button class="btn" type="button" id="m_add">Ajouter</button>
+    <button class="btn alt" type="button" id="m_demo">Charger un exemple fictif</button>
+    <button class="btn alt" type="button" id="m_clear">Tout vider</button>
+    <details style="margin-top:14px"><summary style="cursor:pointer;font-weight:600;color:var(--bronze-d)">Coller plusieurs annonces d'un coup</summary>
+      <label for="m_paste">Une annonce par ligne : prix;surface;repère</label>
+      <textarea id="m_paste" rows="4" placeholder="12000000;600;annonce A&#10;9500000;400;annonce B"></textarea>
+      <button class="btn alt" type="button" id="m_import">Importer</button>
+    </details>
+  </div>
+  <div class="panel nop">
+    <h3>Annonces saisies <span id="m_n"></span></h3>
+    <div id="m_table"><p class="note">Aucune annonce pour l'instant.</p></div>
+    <label class="ck" style="border:0;padding-top:14px"><input type="checkbox" id="m_ex"><span>Exclure les prix hors norme du calcul<small>Utile si une annonce est manifestement erronée ou non comparable.</small></span></label>
+    <label for="m_est" style="margin-top:14px">Surface de votre bien à estimer (m², facultatif)</label>
+    <input id="m_est" type="number" inputmode="decimal" min="0" placeholder="ex. 500">
+  </div>
+  <div class="panel">
+    <div class="doc printarea" id="m_doc"></div>
+    <button class="btn nop" type="button" onclick="window.print()">Imprimer / Enregistrer en PDF</button>
+    <button class="btn alt nop" type="button" id="m_csv">Télécharger en CSV</button>
+    <button class="btn alt nop" type="button" id="m_copy">Copier le résumé</button>
+    <p class="note nop" id="m_msg"></p>
+  </div>
+</section>
+
+</main>
+
+<footer class="site nop">
+  Outils indicatifs fournis par Terrimoine (terrimoine.com). Ils ne remplacent pas l'avis d'un notaire, d'un géomètre-expert ou d'un professionnel agréé. Terrimoine est exploité par GKIMMO, qui propose aussi des services payants facultatifs (mises en relation, vérifications) : vous restez libre de choisir le professionnel de votre choix.
+</footer>
+
+<script>
+const $=id=>document.getElementById(id);
+const fmt=(n,d=0)=>new Intl.NumberFormat('fr-FR',{maximumFractionDigits:d,minimumFractionDigits:d}).format(n).replace(/[  ]/g,' ');
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const num=id=>{const v=parseFloat($(id).value);return isFinite(v)?v:NaN};
+
+/* Montant en lettres (français) */
+function enLettres(n){
+  n=Math.floor(n); if(!isFinite(n)||n<0) return '';
+  if(n===0) return 'zéro';
+  const u=['','un','deux','trois','quatre','cinq','six','sept','huit','neuf','dix','onze','douze','treize','quatorze','quinze','seize','dix-sept','dix-huit','dix-neuf'];
+  const t=['','','vingt','trente','quarante','cinquante','soixante'];
+  const lt100=(x,fin)=>{
+    if(x<20) return u[x];
+    if(x<70){const d=Math.floor(x/10),r=x%10; return t[d]+(r===1?' et un':r?'-'+u[r]:'');}
+    if(x<80){const r=x-60; return 'soixante'+(r===11?' et onze':'-'+u[r]);}
+    const r=x-80; return r===0?'quatre-vingt'+(fin?'s':''):'quatre-vingt-'+u[r];
+  };
+  const lt1000=(x,fin)=>{
+    const h=Math.floor(x/100),r=x%100; let s='';
+    if(h>0){ s=(h===1?'cent':u[h]+' cent'); if(r===0&&h>1&&fin) s+='s'; }
+    if(r>0) s+=(s?' ':'')+lt100(r,fin);
+    return s;
+  };
+  let s='';
+  for(const [v,name] of [[1e9,'milliard'],[1e6,'million']]){
+    const q=Math.floor(n/v);
+    if(q>0){ s+=lt1000(q,true)+' '+name+(q>1?'s':'')+' '; n%=v; }
+  }
+  const k=Math.floor(n/1000);
+  if(k>0){ s+=(k===1?'':lt1000(k,false)+' ')+'mille '; n%=1000; }
+  if(n>0) s+=lt1000(n,true);
+  return s.trim().replace(/\s+/g,' ');
+}
+const cap=s=>s.charAt(0).toUpperCase()+s.slice(1);
+const dFr=iso=>{if(!iso)return '………';const [y,m,d]=iso.split('-');return `${d}/${m}/${y}`};
+const dots=(v,len=24)=>v&&String(v).trim()?esc(v):'.'.repeat(len);
+
+/* Onglets */
+const tabs=[...document.querySelectorAll('nav.tabs button')];
+function show(t){
+  if(!document.getElementById('t-'+t)) t='surface';
+  document.querySelectorAll('.tool').forEach(s=>s.classList.toggle('active',s.id==='t-'+t));
+  tabs.forEach(b=>b.setAttribute('aria-selected',b.dataset.t===t));
+  try{history.replaceState(null,'','#'+t)}catch(e){}
+  window.scrollTo(0,0);
+}
+tabs.forEach(b=>b.addEventListener('click',()=>show(b.dataset.t)));
+
+/* 1. Surface */
+function convert(){
+  const v=num('cv'),f=parseFloat($('cu').value);
+  if(!(v>=0)){ $('cvRes').textContent='Saisissez une surface.'; return; }
+  const m2=v*f, ca=Math.round(m2), ha=Math.floor(ca/10000), a=Math.floor((ca%10000)/100), c=ca%100;
+  $('cvRes').innerHTML=`<span class="big">${fmt(m2,2)} m²</span>= ${fmt(m2/100,4)} ares = ${fmt(m2/10000,6)} hectares<br>Soit <b>${ha} ha ${a} a ${c} ca</b> (forme utilisée dans les titres fonciers).`;
+}
+const SHAPES={
+  rect:[['L','Longueur (m)'],['W','Largeur (m)']],
+  tri:[['a','Côté 1 (m)'],['b','Côté 2 (m)'],['c','Côté 3 (m)']],
+  quad:[['a','Côté AB (m)'],['b','Côté BC (m)'],['c','Côté CD (m)'],['d','Côté DA (m)'],['e','Diagonale AC (m)']]
+};
+let lastArea=NaN;
+function drawShape(){
+  const s=$('sh').value;
+  $('shF').innerHTML='<div class="row r2m">'+SHAPES[s].map(([k,l])=>`<div><label for="s_${k}">${l}</label><input id="s_${k}" type="number" inputmode="decimal" min="0" step="0.01"></div>`).join('')+'</div>';
+  SHAPES[s].forEach(([k])=>$('s_'+k).addEventListener('input',shape));
+  shape();
+}
+const heron=(a,b,c)=>{ if(a+b<=c||a+c<=b||b+c<=a) return NaN; const p=(a+b+c)/2; return Math.sqrt(p*(p-a)*(p-b)*(p-c)); };
+function shape(){
+  const s=$('sh').value, g=k=>num('s_'+k); let area=NaN, err='';
+  const vals=SHAPES[s].map(([k])=>g(k));
+  if(vals.some(x=>!(x>0))){ $('shRes').textContent='Saisissez les mesures en mètres.'; $('useArea').style.display='none'; lastArea=NaN; return; }
+  if(s==='rect') area=g('L')*g('W');
+  else if(s==='tri'){ area=heron(g('a'),g('b'),g('c')); if(isNaN(area)) err='Ces trois côtés ne peuvent pas former un triangle. Vérifiez les mesures.'; }
+  else { const t1=heron(g('a'),g('b'),g('e')), t2=heron(g('c'),g('d'),g('e')); area=t1+t2; if(isNaN(area)) err='Les côtés et la diagonale sont incompatibles. Vérifiez les mesures.'; }
+  if(err){ $('shRes').innerHTML=`<div class="err">${err}</div>`; $('useArea').style.display='none'; lastArea=NaN; return; }
+  lastArea=area;
+  $('shRes').innerHTML=`<span class="big">≈ ${fmt(area,1)} m²</span>soit environ ${fmt(area/100,2)} ares.`;
+  $('useArea').style.display='inline-block';
+}
+function compare(){
+  const o=(p,s)=>({p:num(p),s:num(s)});
+  const A=o('pa','sa'), B=o('pb','sb');
+  const ok=x=>x.p>0&&x.s>0, pm=x=>x.p/x.s;
+  if(!ok(A)&&!ok(B)){ $('cmpRes').textContent='Saisissez au moins une offre.'; return; }
+  let h='<table class="cmp"><tr><th></th><th>Offre A</th><th>Offre B</th></tr>';
+  h+=`<tr><td>Prix au m²</td><td>${ok(A)?'<b>'+fmt(pm(A))+' FCFA</b>':'—'}</td><td>${ok(B)?'<b>'+fmt(pm(B))+' FCFA</b>':'—'}</td></tr>`;
+  h+=`<tr><td>Prix à l'are</td><td>${ok(A)?fmt(pm(A)*100)+' FCFA':'—'}</td><td>${ok(B)?fmt(pm(B)*100)+' FCFA':'—'}</td></tr></table>`;
+  if(ok(A)&&ok(B)){
+    const hi=Math.max(pm(A),pm(B)), lo=Math.min(pm(A),pm(B)), d=(hi-lo)/lo*100;
+    h+=d<0.5?'<p>Les deux offres ont le même prix au m².</p>':`<p>Au m², l'offre <b>${pm(A)>pm(B)?'A':'B'}</b> est plus chère d'environ <b>${fmt(d,1)} %</b> que l'autre.</p>`;
+  }
+  $('cmpRes').innerHTML=h;
+}
+
+/* 2. Reçu */
+function recu(){
+  const m=num('r_montant'), tot=num('r_total'), deja=isNaN(num('r_deja'))?0:num('r_deja');
+  const montant=m>0?`${fmt(m)} FCFA (${esc(enLettres(m))} francs CFA)`:'……………………… FCFA';
+  let reste='';
+  if(tot>0&&m>0){ const r=tot-deja-m; reste=`<p class="mt">Prix total convenu : ${fmt(tot)} FCFA. Déjà versé avant ce reçu : ${fmt(deja)} FCFA. <b>Reste à payer après ce versement : ${fmt(Math.max(r,0))} FCFA.</b></p>`; }
+  const ref=$('r_ref').value.trim()?` (référence : ${esc($('r_ref').value)})`:'';
+  $('r_doc').innerHTML=`<h4>Reçu de paiement</h4>
+  <p>Je soussigné(e) <b>${dots($('r_benef').value)}</b>, reconnais avoir reçu de <b>${dots($('r_payeur').value)}</b> la somme de <b>${montant}</b>, à titre <b>${esc($('r_objet').value)}</b>, par <b>${esc($('r_mode').value)}</b>${ref}.</p>
+  <p>Terrain concerné : <b>${dots($('r_terrain').value,40)}</b>.</p>${reste}
+  <p class="mt">Fait à ${dots($('r_lieu').value,12)}, le ${dFr($('r_date').value)}, en deux exemplaires.</p>
+  <div class="sig"><div>Celui qui reçoit<br>(nom, signature)</div><div>Celui qui paie<br>(nom, signature)</div>${$('r_temoin').value.trim()?`<div>Témoin : ${esc($('r_temoin').value)}<br>(signature)</div>`:''}</div>
+  <p class="warn">Ce reçu atteste d'un versement. Il ne vaut ni acte de vente ni transfert de propriété. La vente d'un terrain se conclut devant un notaire.</p>`;
+}
+
+/* 3. Quittance */
+const MOIS=['janvier','février','mars','avril','mai','juin','juillet','août','septembre','octobre','novembre','décembre'];
+function quittance(){
+  const l=isNaN(num('q_loyer'))?0:num('q_loyer'), c=isNaN(num('q_charges'))?0:num('q_charges'), tot=l+c;
+  const montant=tot>0?`${fmt(tot)} FCFA (${esc(enLettres(tot))} francs CFA)`:'……………………… FCFA';
+  const detail=tot>0?`<p>Détail : loyer ${fmt(l)} FCFA${c>0?` + charges ${fmt(c)} FCFA`:''}.</p>`:'';
+  $('q_doc').innerHTML=`<h4>Quittance de loyer</h4>
+  <p>Je soussigné(e) <b>${dots($('q_bail').value)}</b>, bailleur (ou mandataire du bailleur), reconnais avoir reçu de <b>${dots($('q_loc').value)}</b>, locataire, la somme de <b>${montant}</b>, au titre du loyer${c>0?' et des charges':''} du mois ${/^[aeiouhéû]/i.test($('q_mois').value)?"d'":'de '}<b>${esc($('q_mois').value)} ${esc($('q_an').value)}</b>, par ${esc($('q_mode').value)}, le ${dFr($('q_date').value)}.</p>
+  ${detail}<p>Bien loué : <b>${dots($('q_bien').value,40)}</b>.</p>
+  <p class="mt">Fait à ${dots($('q_lieu').value,12)}, le ${dFr($('q_date').value)}.</p>
+  <div class="sig"><div>Le bailleur ou son mandataire<br>(nom, signature, cachet)</div></div>
+  <p class="warn">Modèle indicatif. Conservez un exemplaire signé.</p>`;
+}
+
+/* 4. Checklist */
+const CK=[
+ ['Avant de verser le moindre franc',[
+  ['Identité du vendeur vérifiée','Pièce d\'identité en cours de validité, comparée au nom sur les papiers du terrain.'],
+  ['Papiers du terrain demandés en copie','Titre, ou pièce attestant les droits du vendeur. Notez le type de document : il détermine les vérifications à faire.'],
+  ['Visite du terrain faite, de jour','Occupants éventuels, construction, culture, litiges avec les voisins. Photographiez les lieux.'],
+  ['Notaire contacté avant tout versement','C\'est lui qui contrôle le titre et rédige l\'acte. Demandez ses honoraires par écrit.']]],
+ ['Vérifications',[
+  ['Titre ou droits du vendeur vérifiés par le notaire','Le nom du vendeur doit correspondre au document, sans rature ni contradiction.'],
+  ['Absence de charges ou de litiges vérifiée','Hypothèque, saisie, contestation. Demandez au notaire ce qu\'il a contrôlé et comment.'],
+  ['Limites du terrain contrôlées par un géomètre-expert','Bornes retrouvées, plan établi, surface mesurée comparée à celle annoncée.'],
+  ['Nom du vendeur et propriétaire apparent identiques','Si le vendeur agit pour un autre, exigez une procuration écrite et faites-la contrôler.']]],
+ ['Paiement',[
+  ['Promesse ou accord écrit signé','Prix, surface, désignation du terrain, calendrier de paiement.'],
+  ['Paiement par circuit traçable','Virement ou mobile money de préférence. Évitez de grosses sommes en espèces.'],
+  ['Reçu précis à chaque versement','Montant en chiffres et en lettres, objet, terrain concerné, signatures. Voir l\'outil « Reçu de paiement ».'],
+  ['Aucun solde versé avant signature de l\'acte','Le solde se règle au moment de la signature devant le notaire, selon ses instructions.']]],
+ ['Signature et après',[
+  ['Acte signé devant le notaire','Relisez-le en entier. Faites expliquer chaque clause que vous ne comprenez pas.'],
+  ['Vente inscrite sans délai','Demandez au notaire la preuve de l\'inscription et gardez-la avec l\'acte.'],
+  ['Copies de tous les documents conservées','Papier et photo sur votre téléphone, rangées à deux endroits différents.'],
+  ['Terrain borné et sécurisé après achat','Bornes visibles, clôture ou présence, pour éviter les occupations.']]]
+];
+let state={};
+try{state=JSON.parse(localStorage.getItem('terrimoine_ck')||'{}')}catch(e){state={}}
+function drawCk(){
+  let h='';
+  CK.forEach((g,gi)=>{
+    h+=`<h3 style="margin-top:18px">${esc(g[0])}</h3>`;
+    g[1].forEach((it,ii)=>{const id=gi+'-'+ii;
+      h+=`<label class="ck"><input type="checkbox" data-id="${id}" ${state[id]?'checked':''}><span>${esc(it[0])}<small>${esc(it[1])}</small></span></label>`;});
+  });
+  $('ckList').innerHTML=h;
+  $('ckList').querySelectorAll('input').forEach(i=>i.addEventListener('change',()=>{
+    state[i.dataset.id]=i.checked; try{localStorage.setItem('terrimoine_ck',JSON.stringify(state))}catch(e){} prog();}));
+  prog();
+}
+function prog(){
+  const total=CK.reduce((a,g)=>a+g[1].length,0), done=Object.values(state).filter(Boolean).length;
+  $('pg').style.width=(done/total*100)+'%';
+  $('pgTxt').textContent=`${done} sur ${total} étapes validées.`+(done===total?' Dossier complet.':'');
+}
+$('ckReset').addEventListener('click',()=>{state={};try{localStorage.removeItem('terrimoine_ck')}catch(e){}drawCk()});
+
+/* 5. Devise */
+const PAR=655.957;
+function devise(){
+  const m=num('d_m');
+  if(!(m>=0)){ $('d_res').textContent='Saisissez un montant.'; return; }
+  $('d_res').innerHTML=$('d_s').value==='e2f'
+   ?`<span class="big">${fmt(m*PAR)} FCFA</span>${fmt(m,2)} € × 655,957`
+   :`<span class="big">${fmt(m/PAR,2)} €</span>${fmt(m)} FCFA ÷ 655,957`;
+}
+function envoyer(){
+  const need=num('x_need'); if(!(need>0)){ $('x_res').textContent='Saisissez la somme à recevoir.'; return; }
+  const rate=num('x_rate')>0?num('x_rate'):PAR, fee=num('x_fee')>=0?num('x_fee'):0;
+  if(fee>=100){ $('x_res').innerHTML='<div class="err">Les frais doivent être inférieurs à 100 %.</div>'; return; }
+  const net=need/rate, send=net/(1-fee/100);
+  $('x_res').innerHTML=`<span class="big">≈ ${fmt(send,2)} € à envoyer</span>Pour recevoir ${fmt(need)} FCFA au taux de ${fmt(rate,3)} FCFA pour 1 €, avec ${fmt(fee,2)} % de frais.<br>Frais estimés : ${fmt(send-net,2)} €. Au taux officiel (655,957), la même somme vaudrait ${fmt(need/PAR,2)} €.`;
+}
+
+/* Liaisons */
+['cv','cu'].forEach(i=>$(i).addEventListener('input',convert));
+$('sh').addEventListener('change',drawShape);
+$('useArea').addEventListener('click',()=>{ if(isFinite(lastArea)){ $('sa').value=Math.round(lastArea*10)/10; compare(); $('sa').scrollIntoView({behavior:'smooth',block:'center'}); }});
+['pa','sa','pb','sb'].forEach(i=>$(i).addEventListener('input',compare));
+['r_payeur','r_benef','r_montant','r_objet','r_terrain','r_mode','r_ref','r_total','r_deja','r_lieu','r_date','r_temoin'].forEach(i=>$(i).addEventListener('input',recu));
+MOIS.forEach((m,i)=>{const o=document.createElement('option');o.textContent=m;$('q_mois').appendChild(o)});
+['q_bail','q_loc','q_bien','q_mois','q_an','q_loyer','q_charges','q_mode','q_date','q_lieu'].forEach(i=>$(i).addEventListener('input',quittance));
+['d_m','d_s'].forEach(i=>$(i).addEventListener('input',devise));
+['x_need','x_rate','x_fee'].forEach(i=>$(i).addEventListener('input',envoyer));
+
+/* 6. Étude de marché */
+const MK='terrimoine_marche';
+let comps=[]; try{comps=JSON.parse(localStorage.getItem(MK)||'[]')}catch(e){comps=[]}
+const saveM=()=>{try{localStorage.setItem(MK,JSON.stringify(comps))}catch(e){}};
+function pctl(sorted,p){ if(!sorted.length) return NaN; const pos=(sorted.length-1)*p, lo=Math.floor(pos), hi=Math.ceil(pos); return sorted[lo]+(sorted[hi]-sorted[lo])*(pos-lo); }
+function mCompute(){
+  const rows=comps.map((c,i)=>({i,label:c.l,p:c.p,s:c.s,ppm:c.p/c.s}));
+  const sortedAll=rows.map(r=>r.ppm).sort((a,b)=>a-b);
+  let lowF=-Infinity, highF=Infinity;
+  if(rows.length>=4){ const q1=pctl(sortedAll,.25), q3=pctl(sortedAll,.75), iqr=q3-q1; lowF=q1-1.5*iqr; highF=q3+1.5*iqr; }
+  rows.forEach(r=>r.out=r.ppm<lowF||r.ppm>highF);
+  const used=($('m_ex').checked&&rows.length>=4)?rows.filter(r=>!r.out):rows;
+  const v=used.map(r=>r.ppm).sort((a,b)=>a-b);
+  const st=v.length?{n:v.length,med:pctl(v,.5),mean:v.reduce((a,b)=>a+b,0)/v.length,q1:pctl(v,.25),q3:pctl(v,.75),min:v[0],max:v[v.length-1]}:null;
+  return {rows,used,st};
+}
+function mFiab(st){
+  if(!st) return '';
+  let t=st.n<5?'très faible (moins de 5 annonces : simple ordre de grandeur)':st.n<10?'moyenne (5 à 9 annonces)':'correcte (10 annonces ou plus)';
+  if(st.med>0&&(st.q3-st.q1)/st.med>0.5) t+='. Les prix sont très dispersés : vérifiez que les biens sont vraiment comparables (quartier, accès, papiers).';
+  return t;
+}
+function drawM(){
+  const {rows,used,st}=mCompute();
+  $('m_n').textContent=rows.length?`(${rows.length})`:'';
+  $('m_table').innerHTML=rows.length?'<table class="cmp"><tr><th>#</th><th>Repère</th><th>Prix au m²</th><th></th></tr>'+rows.map(r=>`<tr><td>${r.i+1}</td><td>${esc(r.label||'—')}<br><small style="color:var(--mut)">${fmt(r.p)} FCFA · ${fmt(r.s,1)} m²</small></td><td><b>${fmt(r.ppm)}</b>${r.out?'<br><small style="color:var(--bad)">hors norme</small>':''}</td><td><button type="button" data-del="${r.i}" style="border:0;background:none;color:var(--bad);font-size:22px;cursor:pointer" aria-label="Supprimer">×</button></td></tr>`).join('')+'</table>':'<p class="note">Aucune annonce pour l\'instant.</p>';
+  $('m_table').querySelectorAll('[data-del]').forEach(b=>b.addEventListener('click',()=>{comps.splice(+b.dataset.del,1);saveM();drawM();}));
+  const zone=$('m_zone').value.trim()||'non précisée', date=new Date().toLocaleDateString('fr-FR');
+  let h=`<h4>Note d'étude de marché</h4><p>Zone : <b>${esc(zone)}</b> · Type de bien : <b>${esc($('m_type').value)}</b> · Date : ${date}</p>`;
+  if(rows.length<3||!st){ h+='<p class="mt">Ajoutez au moins 3 annonces comparables pour obtenir une étude.</p>'; $('m_doc').innerHTML=h; return; }
+  h+=`<p>Échantillon : <b>${rows.length}</b> annonces saisies${used.length!==rows.length?`, <b>${used.length}</b> retenues après exclusion des prix hors norme`:''}.</p>`;
+  h+=`<p class="mt"><b>Prix médian au m² : ${fmt(st.med)} FCFA</b><br>Fourchette habituelle (du quart bas au quart haut) : ${fmt(st.q1)} à ${fmt(st.q3)} FCFA/m²<br>Moyenne : ${fmt(st.mean)} FCFA/m² · Minimum : ${fmt(st.min)} · Maximum : ${fmt(st.max)}</p>`;
+  const est=num('m_est');
+  if(est>0) h+=`<p class="mt"><b>Estimation pour ${fmt(est,1)} m²</b> : valeur centrale ≈ <b>${fmt(st.med*est)} FCFA</b>, fourchette de ${fmt(st.q1*est)} à ${fmt(st.q3*est)} FCFA.</p>`;
+  const outs=rows.filter(r=>r.out).map(r=>'n°'+(r.i+1));
+  if(outs.length) h+=`<p>Annonces hors norme : ${outs.join(', ')}. Vérifiez-les avant de les retenir.</p>`;
+  h+=`<p>Fiabilité : ${esc(mFiab(st))}.</p>`;
+  h+='<table class="cmp" style="font-size:13px"><tr><th>#</th><th>Repère</th><th>Prix</th><th>m²</th><th>FCFA/m²</th></tr>'+rows.map(r=>`<tr><td>${r.i+1}</td><td>${esc(r.label||'—')}</td><td>${fmt(r.p)}</td><td>${fmt(r.s,1)}</td><td>${fmt(r.ppm)}${r.out?' *':''}</td></tr>`).join('')+'</table>';
+  h+='<p class="warn">Étude fondée uniquement sur les annonces saisies par l\'utilisateur. Un prix annoncé n\'est pas un prix de vente conclu. Ce document est un repère, pas une expertise.</p>';
+  $('m_doc').innerHTML=h;
+}
+const cleanN=s=>parseFloat(String(s).replace(/[\s\u00a0\u202f]/g,'').replace(',','.'));
+function addComp(p,s,l){ if(p>0&&s>0){ comps.push({p,s,l:(l||'').slice(0,60)}); return true } return false }
+$('m_add').addEventListener('click',()=>{ if(addComp(num('m_p'),num('m_s'),$('m_l').value)){ ['m_p','m_s','m_l'].forEach(i=>$(i).value=''); saveM(); drawM(); $('m_p').focus(); } else $('m_msg').textContent='Saisissez un prix et une surface supérieurs à zéro.'; });
+$('m_import').addEventListener('click',()=>{ let ok=0,ko=0; $('m_paste').value.split(/\n/).forEach(line=>{ if(!line.trim())return; const [a,b,c]=line.split(/[;\t]/); addComp(cleanN(a),cleanN(b),c&&c.trim())?ok++:ko++; }); $('m_paste').value=''; saveM(); drawM(); $('m_msg').textContent=`${ok} annonce(s) importée(s)${ko?`, ${ko} ligne(s) ignorée(s)`:''}.`; });
+$('m_demo').addEventListener('click',()=>{ comps=[[12000000,600,'Exemple fictif 1'],[9500000,450,'Exemple fictif 2'],[15000000,700,'Exemple fictif 3'],[7800000,400,'Exemple fictif 4'],[11000000,500,'Exemple fictif 5'],[13200000,600,'Exemple fictif 6'],[30000000,600,'Exemple fictif 7 (très cher)'],[10400000,520,'Exemple fictif 8']].map(([p,s,l])=>({p,s,l})); $('m_zone').value='Quartier exemple'; saveM(); drawM(); $('m_msg').textContent='Données fictives chargées pour essayer l\'outil. Videz-les avant votre vraie étude.'; });
+$('m_clear').addEventListener('click',()=>{comps=[];saveM();drawM();$('m_msg').textContent='';});
+['m_zone','m_type','m_ex','m_est'].forEach(i=>$(i).addEventListener('input',drawM));
+$('m_csv').addEventListener('click',()=>{ const {rows}=mCompute(); if(!rows.length){$('m_msg').textContent='Rien à exporter.';return;} const csv='prix_fcfa;surface_m2;prix_m2;repere\n'+rows.map(r=>`${r.p};${r.s};${Math.round(r.ppm)};"${(r.label||'').replace(/"/g,'""')}"`).join('\n'); const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8'})); a.download='etude-marche-terrimoine.csv'; document.body.appendChild(a); a.click(); a.remove(); });
+$('m_copy').addEventListener('click',()=>{ const t=$('m_doc').innerText; (navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(()=>$('m_msg').textContent='Résumé copié.').catch(()=>$('m_msg').textContent='Copie impossible : sélectionnez le texte à la main.'); });
+
+const today=new Date(), iso=today.toISOString().slice(0,10);
+$('r_date').value=iso; $('q_date').value=iso; $('q_an').value=today.getFullYear(); $('q_mois').selectedIndex=today.getMonth();
+drawShape(); recu(); quittance(); drawCk(); drawM();
+show((location.hash||'#surface').slice(1));
+window.addEventListener('hashchange',()=>show(location.hash.slice(1)));
+</script>
+</body>
+</html>

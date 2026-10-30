@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Bornage de terrain : levé GPS, piquetage et contrôle des bornes</title>
+<meta name="description" content="Outil gratuit pour préparer et contrôler un bornage : relever les angles de la parcelle avec le GPS du téléphone, calculer le piquetage au ruban, contrôler les bornes posées.">
+<style>
+:root{--bg:#faf5ec;--card:#fff;--ink:#3b2722;--mut:#7a6a5d;--bronze:#a67c3d;--bronze-d:#86602a;--line:#e5d8c3;--soft:#f3e9d8;--ok:#2f7d4f;--bad:#b3392d}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif}
+.wrap{max-width:820px;margin:0 auto;padding:0 16px;overflow-x:hidden}
+header.site{background:var(--ink);color:#f5e6cf;padding:22px 0 18px}
+header.site .brand{letter-spacing:.3em;font-size:12px;font-weight:700;color:var(--bronze)}
+header.site h1{font:700 26px/1.2 Georgia,serif;margin:8px 0 6px}
+header.site p{margin:0;color:#d9c9b0;font-size:15px}
+nav.steps{display:flex;gap:8px;flex-wrap:wrap;padding:14px 16px;max-width:820px;margin:0 auto}
+nav.steps button{flex:0 0 auto;border:1px solid var(--line);background:var(--card);color:var(--ink);padding:10px 14px;border-radius:22px;font:600 14px system-ui;cursor:pointer;white-space:nowrap}
+nav.steps button[aria-selected=true]{background:var(--bronze);border-color:var(--bronze);color:#fff}
+.step{display:none}.step.active{display:block}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px;margin:0 0 16px}
+h2{font:700 22px/1.25 Georgia,serif;margin:6px 0 4px}
+h3{font:700 17px/1.3 Georgia,serif;margin:18px 0 8px;color:var(--bronze-d)}
+.lead{color:var(--mut);margin:0 0 14px;font-size:15px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:0 14px}
+@media(max-width:560px){.g2{grid-template-columns:1fr}}
+label.l{display:block;font-size:13px;font-weight:600;color:var(--mut);margin:12px 0 4px}
+input,select{width:100%;font:16px system-ui;padding:11px 12px;border:1px solid var(--line);border-radius:10px;background:#fff;color:var(--ink)}
+input:focus,select:focus{outline:2px solid var(--bronze);border-color:var(--bronze)}
+.help{font-size:12.5px;color:var(--mut);margin-top:4px}
+.btn{display:inline-block;border:0;background:var(--bronze);color:#fff;font:700 15px system-ui;padding:12px 18px;border-radius:10px;cursor:pointer;margin:12px 8px 0 0}
+.btn.alt{background:#fff;color:var(--bronze-d);border:1px solid var(--bronze)}
+.btn.bad{background:#fff;color:var(--bad);border:1px solid var(--bad)}
+.btn[disabled]{opacity:.5}
+.res{background:var(--soft);border-radius:10px;padding:12px 14px;margin-top:14px;font-size:15px}
+.res .big{font:700 24px Georgia,serif;color:var(--bronze-d);display:block;margin:2px 0}
+.alert{border-radius:10px;padding:10px 12px;font-size:14.5px;margin-top:12px;border:1px solid}
+.alert.bad{background:#fdecea;border-color:#e8b4ae;color:#7d2219}
+.alert.warn{background:#fff6e0;border-color:#ecd9a8;color:#6b4a00}
+.alert.ok{background:#e8f4ec;border-color:#b6d9c1;color:#1f5a38}
+.note{font-size:13px;color:var(--mut);margin-top:10px}
+.sc{overflow-x:auto}
+table.t{width:100%;border-collapse:collapse;font-size:14px;margin-top:8px}
+table.t th,table.t td{padding:7px 6px;border-bottom:1px solid var(--line);text-align:left;vertical-align:middle}
+table.t th{font-size:12.5px;color:var(--mut)}table.t .n{text-align:right;white-space:nowrap}
+table.t input{padding:7px 8px;font-size:15px;min-width:74px}
+table.t td.nm input{min-width:56px}
+.x{border:0;background:none;color:var(--bad);font-size:22px;cursor:pointer}
+.ok{color:var(--ok);font-weight:700}.ko{color:var(--bad);font-weight:700}
+footer.site{font-size:13px;color:var(--mut);padding:8px 16px 40px;max-width:820px;margin:0 auto}
+.fiche h1{font:700 20px Georgia,serif;margin:0 0 4px}
+.only-print{display:none}
+@page{size:A4;margin:14mm}
+@media print{
+  body{background:#fff;font-size:11pt}
+  .nop,header.site,nav.steps,footer.site,button,.x{display:none!important}
+  .only-print{display:block}
+  .step{display:none!important}.step.active{display:block!important}
+  .wrap{max-width:none;padding:0;overflow:visible}
+  .panel{border:0;padding:0}
+  table.t input{border:0;padding:0;background:none}
+  table.t th,table.t td{border:1px solid #999}
+}
+</style>
+</head>
+<body>
+<header class="site nop"><div class="wrap">
+  <div class="brand">TERRIMOINE</div>
+  <h1>Bornage de terrain</h1>
+  <p>Relever les angles avec le GPS, préparer le piquetage au ruban, contrôler les bornes posées.</p>
+</div></header>
+<nav class="steps nop" id="nav" role="tablist" aria-label="Étapes"></nav>
+<main class="wrap" id="main"></main>
+<footer class="site nop">Outil d'aide de Terrimoine (terrimoine.com). Le bornage officiel et opposable est l'acte d'un géomètre-expert agréé. Cet outil sert à préparer, vérifier et comprendre : il ne remplace ni son levé ni son procès-verbal. Terrimoine est exploité par GKIMMO, qui propose aussi des services payants facultatifs.</footer>
+
+<script>
+const $=id=>document.getElementById(id);
+const fmt=(n,d=0)=>isFinite(n)?new Intl.NumberFormat('fr-FR',{maximumFractionDigits:d,minimumFractionDigits:d}).format(n).replace(/[  ]/g,' '):'—';
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const isN=v=>v!==''&&v!=null&&isFinite(+v);
+const KEY='terrimoine_bornage_v1', GPSKEY='terrimoine_gps_points', GEOKEY='terrimoine_geo_v1';
+const nm=i=>String.fromCharCode(65+(i%26))+(i>=26?Math.floor(i/26):'');
+const defState=()=>({pts:[],origin:null,nReads:5,ref:{a:'',b:''},tolCm:5,meas:{}});
+let S=defState();
+try{const r=localStorage.getItem(KEY);if(r)S={...defState(),...JSON.parse(r)}}catch(e){}
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}};
+
+/* ----- calculs ----- */
+function area(p){let a=0;const n=p.length;for(let i=0;i<n;i++){const u=p[i],v=p[(i+1)%n];a+=u.x*v.y-v.x*u.y}return Math.abs(a)/2}
+function perim(p){let s=0;const n=p.length;for(let i=0;i<n;i++){const u=p[i],v=p[(i+1)%n];s+=Math.hypot(v.x-u.x,v.y-u.y)}return s}
+function toXY(lat,lon){const o=S.origin;const k=Math.PI/180;return{x:(lon-o.lon)*k*6371008.8*Math.cos(o.lat*k),y:(lat-o.lat)*k*6371008.8}}
+function validPts(){return S.pts.filter(p=>isN(p.x)&&isN(p.y)).map(p=>({...p,x:+p.x,y:+p.y}))}
+function impl(a,b,p){const dx=b.x-a.x,dy=b.y-a.y,L=Math.hypot(dx,dy);const ux=dx/L,uy=dy/L;const px=p.x-a.x,py=p.y-a.y;
+ return{dA:Math.hypot(p.x-a.x,p.y-a.y),dB:Math.hypot(p.x-b.x,p.y-b.y),s:px*ux+py*uy,o:ux*py-uy*px,L}}
+
+/* ----- interface ----- */
+let cur='points',gpsBusy=false,gpsMsg='';
+function ptsTable(){return `<div class="sc"><table class="t"><tr><th>Point</th><th>X (m)</th><th>Y (m)</th><th class="n">Précision</th><th></th></tr>`+S.pts.map((p,i)=>`<tr><td class="nm"><input data-p="${i}" data-f="nom" value="${esc(p.nom)}"></td><td><input data-p="${i}" data-f="x" type="number" inputmode="decimal" step="any" value="${esc(p.x)}"></td><td><input data-p="${i}" data-f="y" type="number" inputmode="decimal" step="any" value="${esc(p.y)}"></td><td class="n">${p.acc!=null?'±'+fmt(p.acc,1)+' m':'—'}</td><td><button class="x" type="button" data-del="${i}" aria-label="Supprimer">×</button></td></tr>`).join('')+`</table></div>`+(S.pts.length?'':'<p class="note">Aucun point. Enregistrez un point GPS ou ajoutez-en un à la main.</p>')}
+function stepPoints(){return `<div class="panel"><h2>1. Points de la limite</h2><p class="lead">Faites le tour de la parcelle et enregistrez chaque angle. Les points sont numérotés dans l'ordre du tour.</p>
+<h3 style="margin-top:6px">Relever avec le GPS du téléphone</h3>
+<div class="alert warn">Le GPS d'un téléphone se trompe souvent de plusieurs mètres, plus près des murs et des arbres. Sur une parcelle de quelques dizaines de mètres, cela suffit pour un repérage, pas pour fixer une limite. La précision annoncée par le téléphone est affichée après chaque point.</div>
+<div class="g2"><div><label class="l" for="nR">Lectures moyennées par point</label><select id="nR">${[3,5,8,10].map(n=>`<option${S.nReads==n?' selected':''}>${n}</option>`).join('')}</select><div class="help">Rester immobile pendant la prise. Plus il y a de lectures, plus le résultat est stable.</div></div></div>
+<button class="btn" type="button" id="gpsBtn"${gpsBusy?' disabled':''}>${gpsBusy?'Lecture en cours...':'Enregistrer ce point'}</button>
+<div id="gpsMsg" class="note">${esc(gpsMsg)}</div>
+<h3>Liste des points</h3>${ptsTable()}
+<button class="btn alt" type="button" id="addPt">Ajouter un point à la main</button>
+<button class="btn alt" type="button" id="impGeo">Charger depuis le rapport de levé</button>
+<button class="btn bad" type="button" id="clrPts">Vider la liste</button>
+<div id="ptsRes"></div>
+<div id="exportBox"></div></div>`}
+function refSel(k,l){return `<div><label class="l" for="r_${k}">${l}</label><select id="r_${k}" data-ref="${k}"><option value="">Choisir</option>${S.pts.map((p,i)=>`<option value="${i}"${String(S.ref[k])===String(i)?' selected':''}>${esc(p.nom)}</option>`).join('')}</select></div>`}
+function stepImpl(){return `<div class="panel"><h2>2. Piquetage au ruban</h2><p class="lead">Pour replacer ou poser une borne à partir de deux repères déjà sur le terrain (deux bornes existantes, deux angles de mur), sans instrument. Choisissez ces deux repères, l'outil calcule où poser les autres points.</p>
+<div class="g2">${refSel('a','Repère 1 (déjà sur le terrain)')}${refSel('b','Repère 2 (déjà sur le terrain)')}</div><div id="implRes"></div></div>`}
+function stepCtrl(){return `<div class="panel"><h2>3. Contrôle des bornes posées</h2><p class="lead">Mesurez au ruban la distance entre chaque borne et la suivante, puis les diagonales si possible. L'outil compare avec les distances attendues.</p>
+<div style="max-width:260px"><label class="l" for="tol">Écart toléré (cm)</label><input id="tol" type="number" inputmode="decimal" step="any" min="0" value="${esc(S.tolCm)}"><div class="help">Réglage libre de votre part, pas une norme. Un ruban mal tendu ou en pente fausse la mesure.</div></div><div id="ctrlRes"></div></div>`}
+const STEPS=[['points','1 Points',stepPoints],['impl','2 Piquetage',stepImpl],['ctrl','3 Contrôle',stepCtrl]];
+function build(){$('main').innerHTML=STEPS.map(([id,,fn])=>`<section class="step${id===cur?' active':''}" id="s-${id}">${fn()}</section>`).join('');
+ $('nav').innerHTML=STEPS.map(([id,l])=>`<button role="tab" data-s="${id}" aria-selected="${id===cur}">${l}</button>`).join('');compute()}
+function go(id){if(!STEPS.some(s=>s[0]===id))id='points';cur=id;build();try{history.replaceState(null,'','#'+id)}catch(e){}window.scrollTo(0,0)}
+
+function compute(){
+ const P=validPts();
+ const pr=$('ptsRes');
+ if(pr){let h='';if(P.length>=3){const a=area(P),pe=perim(P);const acc=S.pts.filter(p=>p.acc!=null).map(p=>p.acc);const am=acc.length?acc.reduce((x,y)=>x+y,0)/acc.length:null;
+   h=`<div class="res"><span class="big">${fmt(a,1)} m²</span>${fmt(a/100,2)} ares · périmètre ${fmt(pe,1)} m · ${P.length} points${am!=null?`<br>Ordre de grandeur de l'incertitude de la surface : ± ${fmt(pe*am,0)} m² (périmètre × précision moyenne ±${fmt(am,1)} m). Estimation grossière.`:''}</div>`;
+   if(am!=null&&am>5)h+=`<div class="alert warn">Précision moyenne supérieure à 5 m : refaites les points à l'air libre, loin des murs, en attendant que la précision s'améliore.</div>`}
+  else if(S.pts.length)h='<div class="note">Il faut au moins 3 points valides pour calculer une surface.</div>';
+  pr.innerHTML=h;
+  const eb=$('exportBox');if(eb)eb.innerHTML=P.length>=3?`<h3>Utiliser ces points</h3><button class="btn" type="button" id="expBtn">Envoyer vers le rapport de levé</button><div id="expMsg" class="note">Les points seront repris dans l'outil « Rapport de levé et de bornage » ouvert sur ce même téléphone.</div>`:''}
+ const ir=$('implRes');
+ if(ir){const A=S.pts[S.ref.a],B=S.pts[S.ref.b];let h='';
+  if(!A||!B||S.ref.a===S.ref.b||!isN(A.x)||!isN(A.y)||!isN(B.x)||!isN(B.y))h='<div class="alert warn">Choisissez deux repères différents dans la liste des points.</div>';
+  else{const a={x:+A.x,y:+A.y},b={x:+B.x,y:+B.y};const L=Math.hypot(b.x-a.x,b.y-a.y);
+   if(L<1)h='<div class="alert bad">Les deux repères sont trop proches (moins de 1 m).</div>';
+   else{h=`<div class="res">Distance entre les repères <b>${esc(A.nom)}</b> et <b>${esc(B.nom)}</b> : <b>${fmt(L,2)} m</b>. Mesurez-la sur le terrain : si elle diffère de plus de quelques centimètres, ces repères ont bougé ou les coordonnées sont fausses.</div>`;
+    h+=`<h3>Méthode 1 : deux rubans</h3><p class="note">Fixez un ruban à ${esc(A.nom)} et un autre à ${esc(B.nom)}. Tendez-les en même temps : le point à poser est là où les deux longueurs se croisent. Il y a deux croisements possibles, de part et d'autre de la ligne : choisissez le bon côté.</p>
+    <div class="sc"><table class="t"><tr><th>Point</th><th class="n">Depuis ${esc(A.nom)} (m)</th><th class="n">Depuis ${esc(B.nom)} (m)</th></tr>${S.pts.map((p,i)=>{if(i==S.ref.a||i==S.ref.b||!isN(p.x)||!isN(p.y))return '';const r=impl(a,b,{x:+p.x,y:+p.y});return `<tr><td><b>${esc(p.nom)}</b></td><td class="n">${fmt(r.dA,2)}</td><td class="n">${fmt(r.dB,2)}</td></tr>`}).join('')}</table></div>
+    <h3>Méthode 2 : le long de la ligne et à angle droit</h3><p class="note">Tendez un cordeau de ${esc(A.nom)} vers ${esc(B.nom)}. Mesurez la distance le long du cordeau à partir de ${esc(A.nom)}, puis tracez à angle droit (par exemple avec un triangle 3-4-5) la distance indiquée, à gauche ou à droite en regardant de ${esc(A.nom)} vers ${esc(B.nom)}.</p>
+    <div class="sc"><table class="t"><tr><th>Point</th><th class="n">Le long (m)</th><th class="n">À angle droit (m)</th><th>Côté</th></tr>${S.pts.map((p,i)=>{if(i==S.ref.a||i==S.ref.b||!isN(p.x)||!isN(p.y))return '';const r=impl(a,b,{x:+p.x,y:+p.y});return `<tr><td><b>${esc(p.nom)}</b></td><td class="n">${fmt(r.s,2)}${r.s<0?' (avant '+esc(A.nom)+')':r.s>r.L?' (après '+esc(B.nom)+')':''}</td><td class="n">${fmt(Math.abs(r.o),2)}</td><td>${Math.abs(r.o)<0.005?'sur la ligne':r.o>0?'gauche':'droite'}</td></tr>`}).join('')}</table></div>
+    <button class="btn alt" type="button" onclick="window.print()">Imprimer la fiche de piquetage</button>`}}
+  ir.innerHTML=h}
+ const cr=$('ctrlRes');
+ if(cr){const n=P.length;
+  if(n<3||n!==S.pts.length){cr.innerHTML='<div class="alert warn">Il faut au moins 3 points valides, tous renseignés.</div>';window.__rows=null}
+  else{const rows=[];
+   for(let i=0;i<n;i++)rows.push({k:'c'+i,lab:`${P[i].nom}-${P[(i+1)%n].nom}`,d:Math.hypot(P[(i+1)%n].x-P[i].x,P[(i+1)%n].y-P[i].y)});
+   if(n>3)for(let i=0;i<n;i++)for(let j=i+2;j<n;j++){if(i===0&&j===n-1)continue;rows.push({k:`d${i}_${j}`,lab:`${P[i].nom}-${P[j].nom} (diagonale)`,d:Math.hypot(P[j].x-P[i].x,P[j].y-P[i].y)})}
+   window.__rows=rows;
+   cr.innerHTML=`<div class="sc"><table class="t"><tr><th>Côté</th><th class="n">Attendu (m)</th><th>Mesuré (m)</th><th class="n">Écart</th></tr>`+rows.map(r=>{const m=S.meas[r.k];return `<tr><td>${esc(r.lab)}</td><td class="n">${fmt(r.d,2)}</td><td><input data-m="${r.k}" type="number" inputmode="decimal" step="any" value="${esc(m==null?'':m)}"></td><td class="n" id="e_${r.k}"></td></tr>`}).join('')+`</table></div><div id="ctrlSum"></div><button class="btn alt" type="button" onclick="window.print()">Imprimer la fiche de contrôle</button>`;
+   updCtrl()}}
+}
+function updCtrl(){const rows=window.__rows;if(!rows)return;const tol=isN(S.tolCm)?+S.tolCm:5;let ok=0,ko=0,tot=0;
+ rows.forEach(r=>{const m=S.meas[r.k];const c=$('e_'+r.k);if(!c)return;if(isN(m)){const ec=(+m-r.d)*100;tot++;const good=Math.abs(ec)<=tol;good?ok++:ko++;c.innerHTML=`<span class="${good?'ok':'ko'}">${ec>=0?'+':''}${fmt(ec,1)} cm ${good?'✓':'✗'}</span>`}else c.textContent='—'});
+ const sm=$('ctrlSum');if(sm)sm.innerHTML=tot?`<div class="alert ${ko?'bad':'ok'}">${ko?`${ko} mesure(s) hors tolérance sur ${tot}. Vérifiez la tension et l'horizontalité du ruban, puis la position des bornes concernées. Une borne mal posée fausse tous les côtés qui s'y rattachent.`:`Les ${tot} mesures saisies sont dans la tolérance de ${fmt(tol,1)} cm.`}</div>`:''}
+
+/* ----- GPS ----- */
+function readGps(){
+ if(!navigator.geolocation){gpsMsg='Ce navigateur ne donne pas accès au GPS.';build();return}
+ gpsBusy=true;gpsMsg='Ne bougez pas. Lecture du GPS...';build();
+ const N=+S.nReads||5,reads=[];let done=false;let wid;
+ const finish=()=>{if(done)return;done=true;try{navigator.geolocation.clearWatch(wid)}catch(e){}clearTimeout(tm);gpsBusy=false;
+  if(!reads.length){gpsMsg='Aucune position reçue. Vérifiez que la localisation est activée et autorisée pour ce site.';build();return}
+  const lat=reads.reduce((a,r)=>a+r.lat,0)/reads.length,lon=reads.reduce((a,r)=>a+r.lon,0)/reads.length,acc=reads.reduce((a,r)=>a+r.acc,0)/reads.length;
+  if(!S.origin)S.origin={lat,lon};const q=toXY(lat,lon);
+  S.pts.push({nom:nm(S.pts.length),x:Math.round(q.x*100)/100,y:Math.round(q.y*100)/100,acc:Math.round(acc*10)/10});save();
+  gpsMsg=`Point ${nm(S.pts.length-1)} enregistré (${reads.length} lecture(s), précision annoncée ±${fmt(acc,1)} m).`;build()};
+ const tm=setTimeout(finish,30000);
+ wid=navigator.geolocation.watchPosition(p=>{reads.push({lat:p.coords.latitude,lon:p.coords.longitude,acc:p.coords.accuracy});gpsMsg=`Lecture ${reads.length} sur ${N}, précision ±${fmt(p.coords.accuracy,1)} m...`;const g=$('gpsMsg');if(g)g.textContent=gpsMsg;if(reads.length>=N)finish()},err=>{gpsMsg=err.code===1?'Localisation refusée. Autorisez-la dans les réglages du navigateur pour ce site.':'Position indisponible. Essayez à l\'air libre.';reads.length?finish():(done=true,clearTimeout(tm),gpsBusy=false,build())},{enableHighAccuracy:true,maximumAge:0,timeout:20000});
+}
+
+/* ----- événements ----- */
+document.addEventListener('click',e=>{const t=e.target;
+ if(t.dataset.s)return go(t.dataset.s);
+ if(t.dataset.del!==undefined){S.pts.splice(+t.dataset.del,1);S.ref={a:'',b:''};S.meas={};save();build();return}
+ if(t.id==='gpsBtn')return readGps();
+ if(t.id==='addPt'){S.pts.push({nom:nm(S.pts.length),x:'',y:'',acc:null});save();build();return}
+ if(t.id==='clrPts'){if(t.dataset.arm){S=defState();save();build();return}t.dataset.arm='1';t.textContent='Confirmer : tout effacer';setTimeout(()=>{if(t.isConnected){delete t.dataset.arm;t.textContent='Vider la liste'}},4000);return}
+ if(t.id==='impGeo'){let g;try{g=JSON.parse(localStorage.getItem(GEOKEY)||'null')}catch(x){}const ok=g&&g.mesure&&g.mesure.mode==='coord'&&Array.isArray(g.points)&&g.points.length>=3&&g.points.every(p=>isN(p.x)&&isN(p.y));
+  if(!ok){$('gpsMsg').textContent='Aucun dossier de levé en mode coordonnées sur ce téléphone.';return}
+  S.pts=g.points.map(p=>({nom:p.nom,x:+p.x,y:+p.y,acc:null}));S.ref={a:'',b:''};S.meas={};save();gpsMsg=`${S.pts.length} points chargés depuis le rapport de levé.`;build();return}
+ if(t.id==='expBtn'){try{localStorage.setItem(GPSKEY,JSON.stringify(validPts().map(p=>({nom:p.nom,x:p.x,y:p.y,acc:p.acc}))));$('expMsg').textContent='Points envoyés. Ouvrez le rapport de levé, étape « Mesures », et touchez « Importer les points du levé GPS ».'}catch(x){$('expMsg').textContent='Envoi impossible sur ce navigateur.'}return}
+});
+document.addEventListener('input',e=>{const t=e.target;
+ if(t.dataset.p!==undefined){const p=S.pts[+t.dataset.p];p[t.dataset.f]=t.dataset.f==='nom'?t.value:(t.value===''?'':parseFloat(t.value));p.acc=t.dataset.f==='nom'?p.acc:null;save();compute();return}
+ if(t.dataset.m){S.meas[t.dataset.m]=t.value===''?'':parseFloat(t.value);save();updCtrl();return}
+ if(t.id==='tol'){S.tolCm=t.value===''?'':parseFloat(t.value);save();updCtrl();return}
+});
+document.addEventListener('change',e=>{const t=e.target;
+ if(t.id==='nR'){S.nReads=+t.value;save();return}
+ if(t.dataset.ref){S.ref[t.dataset.ref]=t.value;save();compute()}
+});
+build();go((location.hash||'#points').slice(1));
+window.addEventListener('hashchange',()=>go(location.hash.slice(1)));
+</script>
+</body>
+</html>
