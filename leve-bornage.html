@@ -1,0 +1,343 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Rapport de levé et de bornage : surface, plan et procès-verbal de reconnaissance</title>
+<meta name="description" content="Outil gratuit : à partir de coordonnées ou d'un cheminement, calcule la surface, les côtés, les angles et la fermeture, dessine le plan et produit un rapport A4 avec procès-verbal de reconnaissance des limites.">
+<style>
+:root{--bg:#faf5ec;--card:#fff;--ink:#3b2722;--mut:#7a6a5d;--bronze:#a67c3d;--bronze-d:#86602a;--line:#e5d8c3;--soft:#f3e9d8;--ok:#2f7d4f;--bad:#b3392d}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif}
+.wrap{max-width:820px;margin:0 auto;padding:0 16px;overflow-x:hidden}
+header.site{background:var(--ink);color:#f5e6cf;padding:22px 0 18px}
+header.site .brand{letter-spacing:.3em;font-size:12px;font-weight:700;color:var(--bronze)}
+header.site h1{font:700 26px/1.2 Georgia,serif;margin:8px 0 6px}
+header.site p{margin:0;color:#d9c9b0;font-size:15px}
+nav.steps{display:flex;gap:8px;overflow-x:auto;padding:14px 16px;max-width:820px;margin:0 auto}
+nav.steps button{flex:0 0 auto;border:1px solid var(--line);background:var(--card);color:var(--ink);padding:10px 14px;border-radius:22px;font:600 14px system-ui;cursor:pointer;white-space:nowrap}
+nav.steps button[aria-selected=true]{background:var(--bronze);border-color:var(--bronze);color:#fff}
+nav.steps button.done:not([aria-selected=true]){border-color:var(--ok);color:var(--ok)}
+.step{display:none}.step.active{display:block}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px;margin:0 0 16px}
+h2{font:700 22px/1.25 Georgia,serif;margin:6px 0 4px}
+h3{font:700 17px/1.3 Georgia,serif;margin:0 0 10px;color:var(--bronze-d)}
+.lead{color:var(--mut);margin:0 0 14px;font-size:15px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:0 14px}
+@media(max-width:560px){.g2{grid-template-columns:1fr}}
+.fld{margin:0}.fld.full{grid-column:1/-1}
+label.l{display:block;font-size:13px;font-weight:600;color:var(--mut);margin:12px 0 4px}
+input,select,textarea{width:100%;font:16px system-ui;padding:11px 12px;border:1px solid var(--line);border-radius:10px;background:#fff;color:var(--ink)}
+textarea{min-height:74px;resize:vertical}
+input:focus,select:focus,textarea:focus{outline:2px solid var(--bronze);border-color:var(--bronze)}
+.help{font-size:12.5px;color:var(--mut);margin-top:4px}
+.chk{display:flex;gap:10px;align-items:flex-start;padding:7px 0;cursor:pointer}
+.chk input{width:22px;height:22px;flex:0 0 22px;accent-color:var(--bronze)}
+.btn{display:inline-block;border:0;background:var(--bronze);color:#fff;font:700 15px system-ui;padding:12px 18px;border-radius:10px;cursor:pointer;margin:14px 8px 0 0}
+.btn.alt{background:#fff;color:var(--bronze-d);border:1px solid var(--bronze)}
+.btn.bad{background:#fff;color:var(--bad);border:1px solid var(--bad)}
+.res{background:var(--soft);border-radius:10px;padding:12px 14px;margin-top:14px;font-size:15px}
+.res .big{font:700 24px Georgia,serif;color:var(--bronze-d);display:block;margin:2px 0}
+.alert{border-radius:10px;padding:10px 12px;font-size:14.5px;margin-top:12px;border:1px solid}
+.alert.bad{background:#fdecea;border-color:#e8b4ae;color:#7d2219}
+.alert.warn{background:#fff6e0;border-color:#ecd9a8;color:#6b4a00}
+.alert.ok{background:#e8f4ec;border-color:#b6d9c1;color:#1f5a38}
+.note{font-size:13px;color:var(--mut);margin-top:10px}
+.card{border:1px solid var(--line);border-radius:12px;padding:6px 14px 12px;margin:12px 0;background:#fffdf9}
+.card h4{margin:8px 0 0;font:700 15px Georgia,serif;display:flex;justify-content:space-between;align-items:center}
+.card .x{border:0;background:none;color:var(--bad);font-size:22px;cursor:pointer}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:0 10px}
+@media(max-width:560px){.g3{grid-template-columns:1fr 1fr}}
+.sc{overflow-x:auto}
+table.t{width:100%;border-collapse:collapse;font-size:14px;margin-top:8px}
+table.t th,table.t td{padding:7px 6px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+table.t th{font-size:12.5px;color:var(--mut)}table.t .n{text-align:right;white-space:nowrap}
+.nav2{display:flex;justify-content:space-between;gap:10px;margin-top:6px}
+footer.site{font-size:13px;color:var(--mut);padding:8px 16px 40px;max-width:820px;margin:0 auto}
+/* RAPPORT */
+.rep{background:#fff;color:#111;border:1px solid var(--line);border-radius:6px;padding:26px 24px;font:14.5px/1.6 Georgia,"Times New Roman",serif;overflow-x:auto}
+.rep h1{font:700 24px Georgia,serif;margin:0 0 6px;text-align:center;letter-spacing:.04em}
+.rep h2.rs{font:700 17px Georgia,serif;margin:26px 0 8px;padding-bottom:4px;border-bottom:2px solid #111;color:#111}
+.rep h3.rs{font:700 14.5px Georgia,serif;margin:14px 0 6px;color:#111}
+.rep table{width:100%;border-collapse:collapse;font-size:13px;margin:8px 0}
+.rep th,.rep td{border:1px solid #999;padding:5px 7px;text-align:left;vertical-align:top}
+.rep th{background:#eee}.rep td.n,.rep th.n{text-align:right;white-space:nowrap}
+.rep .cover{text-align:center;padding:30px 0 20px;border-bottom:3px double #111;margin-bottom:10px}
+.rep .cover .sub{font-size:15px;margin:4px 0}
+.rep .concl{border:2px solid #111;padding:14px;margin:12px 0;text-align:center}
+.rep .concl .v{font:700 26px Georgia,serif;display:block;margin:4px 0}
+.rep .small{font-size:12px;color:#444}
+.rep .warnb{border:2px solid #b3392d;padding:8px 12px;margin:10px 0;background:#fff4f2}
+.rep ul{margin:6px 0 6px 20px;padding:0}
+.rep svg{width:100%;height:auto;border:1px solid #999;background:#fff;display:block}
+.rep .sigcell{height:44px}
+.rep .pv{break-before:page}
+@page{size:A4;margin:16mm}
+@media print{
+  body{background:#fff;font-size:11pt}
+  .nop,header.site,nav.steps,footer.site{display:none!important}
+  .step{display:none!important}.step#s-rapport{display:block!important}
+  .wrap{max-width:none;padding:0;overflow:visible}
+  .panel{border:0;padding:0;margin:0}
+  .rep{border:0;padding:0;font-size:10.5pt;overflow:visible}
+  .rep h2.rs,.rep h3.rs{break-after:avoid}
+  .rep table,.rep .concl,.rep .warnb,.rep svg{break-inside:avoid}
+  .rep tr{break-inside:avoid}
+  .rep .cover{break-after:page}
+  .rep .sigcell{height:9mm}
+  .rep .pv p{margin:6px 0}
+}
+</style>
+</head>
+<body>
+<header class="site nop"><div class="wrap">
+  <div class="brand">TERRIMOINE</div>
+  <h1>Rapport de levé et de bornage</h1>
+  <p>Surface, côtés, angles, plan et procès-verbal de reconnaissance des limites. Tout reste sur votre appareil.</p>
+</div></header>
+<nav class="steps nop" id="nav" role="tablist" aria-label="Étapes"></nav>
+<main class="wrap" id="main"></main>
+<footer class="site nop">Outil de calcul et de mise en forme de Terrimoine (terrimoine.com). Il ne remplace pas le levé, le plan et le bornage d'un géomètre-expert agréé, seul habilité à les établir de façon opposable. Terrimoine est exploité par GKIMMO, qui propose aussi des services payants facultatifs (mises en relation, vérifications) : vous restez libre de choisir votre professionnel.</footer>
+
+<script>
+const $=id=>document.getElementById(id);
+const fmt=(n,d=0)=>isFinite(n)?new Intl.NumberFormat('fr-FR',{maximumFractionDigits:d,minimumFractionDigits:d}).format(n).replace(/[  ]/g,' '):'—';
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const dFr=s=>{if(!s)return '—';const [y,m,d]=s.split('-');return `${d}/${m}/${y}`};
+const iso=new Date().toISOString().slice(0,10);
+const isN=v=>v!==''&&v!=null&&isFinite(+v);
+const KEY='terrimoine_geo_v1';
+const BORNES=['Borne béton','Piquet métallique','Repère existant','Angle de mur ou de clôture','Non matérialisé'];
+const ETATS=['Existante','À poser','Posée lors du levé','À retrouver'];
+const defPoint=i=>({nom:String.fromCharCode(65+(i%26))+(i>=26?Math.floor(i/26):''),x:'',y:'',g:'',d:'',borne:'Non matérialisé',etat:'À poser',lim:''});
+const defState=()=>({
+ dossier:{ref:'LEV-'+iso.replace(/-/g,'')+'-'+String(Math.floor(Math.random()*900)+100),client:'',objet:'Reconnaissance des limites',dateLeve:iso,dateRapport:iso,operateur:'',qualite:'',lieu:'Bamako',interet:'Aucun',interetTexte:''},
+ parcelle:{designation:'',quartier:'',ville:'Bamako',titre:'',titreType:'Titre foncier',titulaire:'',surfTitre:'',tolSurf:2,obs:''},
+ mesure:{mode:'coord',unite:'gon',x0:0,y0:0,tolFerm:2000,instrument:'',precision:'',methode:'',systeme:'Repère local arbitraire (X vers l\'est, Y vers le nord)',lecture:'Non précisé'},
+ points:[defPoint(0),defPoint(1),defPoint(2),defPoint(3)],
+ pv:{lieuPv:'',datePv:iso,present:'',obs:''}
+});
+function merge(a,b){ if(Array.isArray(a)){return Array.isArray(b)?b:a} if(typeof a!=='object'||a===null)return b===undefined?a:b; const o={...a}; for(const k in b){o[k]=(k in a&&typeof a[k]==='object'&&a[k]!==null&&!Array.isArray(a[k]))?merge(a[k],b[k]):b[k]} return o;}
+let S=defState();
+try{const raw=localStorage.getItem(KEY);if(raw)S=merge(defState(),JSON.parse(raw));}catch(e){}
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}};
+const getP=(o,p)=>p.split('.').reduce((a,k)=>a==null?a:a[k],o);
+const setP=(o,p,v)=>{const ks=p.split('.');let a=o;for(let i=0;i<ks.length-1;i++)a=a[ks[i]];a[ks[ks.length-1]]=v};
+
+function fld(k,l,t,o){o=o||{};const id='f_'+k.replace(/\./g,'_');const v=getP(S,k);const cls='fld'+(o.full?' full':'');let inp='';
+ if(t==='select')inp=`<select id="${id}" data-k="${k}">`+(o.opts||[]).map(x=>{const val=Array.isArray(x)?x[0]:x,lab=Array.isArray(x)?x[1]:x;return `<option value="${esc(val)}"${String(v)===String(val)?' selected':''}>${esc(lab)}</option>`}).join('')+'</select>';
+ else if(t==='textarea')inp=`<textarea id="${id}" data-k="${k}" placeholder="${esc(o.ph||'')}">${esc(v)}</textarea>`;
+ else inp=`<input id="${id}" data-k="${k}" type="${t}"${t==='number'?' inputmode="decimal" step="any"':''} value="${esc(v)}" placeholder="${esc(o.ph||'')}">`;
+ return `<div class="${cls}"><label class="l" for="${id}">${esc(l)}</label>${inp}${o.help?`<div class="help">${o.help}</div>`:''}</div>`;}
+const grid=(a,c)=>`<div class="${c||'g2'}">${a.join('')}</div>`;
+
+function stepDossier(){return `<div class="panel"><h2>1. Dossier</h2><p class="lead">Qui demande le levé, quand, et qui l'a réalisé.</p>`+grid([
+ fld('dossier.client','Demandeur','text',{ph:'Nom ou raison sociale'}),
+ fld('dossier.objet','Objet','select',{opts:['Reconnaissance des limites','Vérification de surface','Division ou lotissement','Avant achat ou vente','Litige de limite','Autre']}),
+ fld('dossier.dateLeve','Date du levé','date'),
+ fld('dossier.dateRapport','Date du rapport','date'),
+ fld('dossier.operateur','Établi par','text',{ph:'Nom et prénom'}),
+ fld('dossier.qualite','Qualité de l\'auteur','text',{ph:'À renseigner par vous',help:'Indiquez votre qualité réelle. L\'outil n\'en ajoute aucune, ni cachet, ni numéro d\'agrément.'}),
+ fld('dossier.lieu','Fait à','text'),
+ fld('dossier.interet','Intérêt de l\'auteur','select',{opts:[['Aucun','Aucun intérêt dans la parcelle ni dans l\'opération'],['Déclaré','Intérêt à déclarer']]}),
+ fld('dossier.interetTexte','Précisions','text',{full:true}),
+ ])+`<h3 style="margin-top:18px">La parcelle</h3>`+grid([
+ fld('parcelle.designation','Désignation','text',{ph:'ex. Lot 123, îlot 45'}),
+ fld('parcelle.quartier','Quartier','text'),
+ fld('parcelle.ville','Ville','text'),
+ fld('parcelle.titreType','Document de propriété','select',{opts:['Titre foncier','Titre provisoire','Permis d\'occuper ou lettre d\'attribution','Attestation','Aucun document']}),
+ fld('parcelle.titre','Numéro du document','text'),
+ fld('parcelle.titulaire','Titulaire indiqué','text'),
+ fld('parcelle.surfTitre','Surface indiquée au document (m²)','number'),
+ fld('parcelle.tolSurf','Écart de surface à signaler (%)','number',{help:'Réglage libre, pas une norme.'}),
+ ])+fld('parcelle.obs','Observations sur la parcelle','textarea',{ph:'Clôture, construction, accès, particularités...'})+`</div>`}
+
+function stepMesure(){return `<div class="panel"><h2>2. Mesures</h2><p class="lead">Choisissez comment vous donnez les limites : par coordonnées (levé de points) ou par cheminement (distances et gisements). Ordre des points : faites le tour de la parcelle, dans un sens ou l'autre.</p>`+grid([
+ fld('mesure.mode','Mode de saisie','select',{opts:[['coord','Coordonnées X, Y des points'],['chem','Cheminement : gisement et distance']]}),
+ fld('mesure.unite','Unité des angles et gisements','select',{opts:[['gon','Grades (gon)'],['deg','Degrés décimaux']],help:'Gisement : angle depuis le nord, dans le sens des aiguilles d\'une montre.'}),
+ fld('mesure.systeme','Système de coordonnées','text',{full:true}),
+ fld('mesure.instrument','Instrument','text',{ph:'ex. station totale, GPS, ruban de 50 m'}),
+ fld('mesure.precision','Précision annoncée de l\'instrument','text',{ph:'ex. ±2 cm'}),
+ fld('mesure.methode','Méthode de levé','text',{ph:'ex. rayonnement, cheminement fermé'}),
+ ])+`<div id="cheminOpts"></div><h3 style="margin-top:18px">Points de la limite</h3><div id="pts"></div>
+ <button class="btn" type="button" id="addPt">Ajouter un point</button><button class="btn alt" type="button" id="impGps">Importer les points du levé GPS</button><div id="msgPt" class="note"></div><div id="res-mes"></div></div>`}
+
+function ptCard(p,i){const k=`points.${i}.`;const chem=S.mesure.mode==='chem';const u=S.mesure.unite==='gon'?'gon':'°';
+ const m=chem?grid([fld(k+'g',`Gisement vers ${nextName(i)} (${u})`,'number'),fld(k+'d',`Distance vers ${nextName(i)} (m)`,'number')]):grid([fld(k+'x','X (m, vers l\'est)','number'),fld(k+'y','Y (m, vers le nord)','number')]);
+ return `<div class="card"><h4>Point ${i+1}<button class="x" type="button" data-del="${i}" aria-label="Supprimer le point">×</button></h4>`+grid([fld(k+'nom','Nom','text'),fld(k+'borne','Borne','select',{opts:BORNES}),fld(k+'etat','État de la borne','select',{opts:ETATS})],'g3')+m+
+ fld(k+'lim',`Limitrophe côté ${esc(p.nom||'')} → ${esc(nextName(i))}`,'text',{ph:'Voisin, rue ou parcelle voisine (facultatif)'})+`</div>`}
+const nextName=i=>{const n=S.points.length;const q=S.points[(i+1)%n];return (q&&q.nom)||'suivant'};
+
+function stepRapport(){return `<div class="panel nop"><h2>3. Rapport</h2><p class="lead">Le rapport se met à jour tout seul. Complétez le procès-verbal, puis imprimez ou enregistrez en PDF.</p>`+grid([
+ fld('pv.lieuPv','Lieu de la reconnaissance','text'),
+ fld('pv.datePv','Date de la reconnaissance','date'),
+ fld('pv.present','Personnes présentes','textarea',{full:true,ph:'Noms et qualités : demandeur, voisins, témoins...'}),
+ fld('pv.obs','Observations et réserves','textarea',{full:true,ph:'Réserves exprimées par les parties, points contestés...'}),
+ ])+`<div class="nav2" style="flex-wrap:wrap"><div><button class="btn" type="button" onclick="window.print()">Imprimer / Enregistrer en PDF</button><button class="btn alt" type="button" id="saveFile">Enregistrer le dossier</button><button class="btn alt" type="button" id="openFile">Ouvrir un dossier</button><input type="file" id="fileIn" accept=".json,application/json" style="display:none"></div><button class="btn bad" type="button" id="newCase">Nouveau dossier</button></div><div id="msgRep" class="note"></div></div><div class="rep" id="report"></div>`}
+
+const STEPS=[['dossier','1 Dossier',stepDossier],['mesure','2 Mesures',stepMesure],['rapport','3 Rapport',stepRapport]];
+let cur='dossier';
+function build(){
+ $('main').innerHTML=STEPS.map(([id,,fn])=>`<section class="step${id===cur?' active':''}" id="s-${id}">${fn()}${id!=='rapport'?`<div class="nav2 nop"><button class="btn alt" type="button" data-go="-1">Précédent</button><button class="btn" type="button" data-go="1">Suivant</button></div>`:''}</section>`).join('');
+ $('nav').innerHTML=STEPS.map(([id,l])=>`<button role="tab" data-s="${id}" aria-selected="${id===cur}">${l}</button>`).join('');
+ drawPts();compute();}
+function drawPts(){const el=$('pts');if(!el)return;el.innerHTML=S.points.map(ptCard).join('');
+ const c=$('cheminOpts');if(c)c.innerHTML=S.mesure.mode==='chem'?grid([fld('mesure.x0','X du premier point (m)','number'),fld('mesure.y0','Y du premier point (m)','number'),fld('mesure.tolFerm','Précision de fermeture exigée (1 / N)','number',{help:'Réglage libre : N = 2000 signifie 1 cm d\'erreur par 20 m de périmètre. Ce n\'est pas une norme.'})]):'';}
+function go(id){if(!STEPS.some(s=>s[0]===id))id='dossier';cur=id;document.querySelectorAll('.step').forEach(s=>s.classList.toggle('active',s.id==='s-'+id));document.querySelectorAll('#nav button').forEach(b=>b.setAttribute('aria-selected',b.dataset.s===id));try{history.replaceState(null,'','#'+id)}catch(e){}window.scrollTo(0,0);compute();}
+document.addEventListener('click',e=>{const t=e.target;
+ if(t.dataset.s)return go(t.dataset.s);
+ if(t.dataset.go){const i=STEPS.findIndex(s=>s[0]===cur)+ +t.dataset.go;if(i>=0&&i<STEPS.length)go(STEPS[i][0]);return}
+ if(t.dataset.del!==undefined){if(S.points.length<=3){$('msgPt').textContent='Trois points au minimum.';return}S.points.splice(+t.dataset.del,1);save();drawPts();compute();return}
+ if(t.id==='addPt'){if(S.points.length>=30){$('msgPt').textContent='30 points au maximum.';return}S.points.push(defPoint(S.points.length));save();drawPts();compute();return}
+ if(t.id==='impGps'){let g=null;try{g=JSON.parse(localStorage.getItem('terrimoine_gps_points')||'null')}catch(x){}if(!Array.isArray(g)||g.length<3){$('msgPt').textContent='Aucun point GPS trouvé sur ce téléphone. Utilisez d\'abord l\'outil Bornage de terrain.';return}
+  S.mesure.mode='coord';S.points=g.slice(0,30).map(q=>({...defPoint(0),nom:q.nom,x:q.x,y:q.y}));if(!S.mesure.instrument)S.mesure.instrument='GPS de téléphone (précision limitée)';save();drawPts();compute();$('msgPt').textContent=g.length+' points importés.';return}
+ if(t.id==='saveFile'){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(S,null,1)],{type:'application/json'}));a.download=`dossier-${S.dossier.ref}.json`;document.body.appendChild(a);a.click();a.remove();return}
+ if(t.id==='openFile'){$('fileIn').click();return}
+ if(t.id==='newCase'){if(t.dataset.arm){S=defState();save();build();go('dossier');return}t.dataset.arm='1';t.textContent='Confirmer : tout effacer';setTimeout(()=>{if(t.isConnected){delete t.dataset.arm;t.textContent='Nouveau dossier'}},4000)}
+});
+document.addEventListener('change',e=>{if(e.target.id==='fileIn'){const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{S=merge(defState(),JSON.parse(r.result));save();build();go('rapport');$('msgRep').textContent='Dossier ouvert.'}catch(x){$('msgRep').textContent='Fichier illisible.'}};r.readAsText(f)}});
+function onInput(e){const t=e.target;const k=t.dataset&&t.dataset.k;if(!k)return;const v=t.type==='number'?(t.value===''?'':parseFloat(t.value)):t.value;setP(S,k,v);save();
+ if(k==='mesure.mode'||k==='mesure.unite')drawPts();
+ compute();}
+document.addEventListener('input',onInput);
+document.addEventListener('change',e=>{if(e.target.dataset&&e.target.dataset.k&&e.target.tagName==='SELECT')onInput(e)});
+
+/* ---------- Calculs ---------- */
+const R2D=180/Math.PI;
+const toUnit=(deg,u)=>u==='gon'?deg*400/360:deg;
+const fromUnit=(v,u)=>u==='gon'?v*360/400:v;
+function segInter(a,b,c,d){const o=(p,q,r)=>(q.x-p.x)*(r.y-p.y)-(q.y-p.y)*(r.x-p.x);const d1=o(a,b,c),d2=o(a,b,d),d3=o(c,d,a),d4=o(c,d,b);return d1*d2<0&&d3*d4<0}
+function calc(S){
+ const M=S.mesure,u=M.unite,P=S.points,n=P.length,R={ok:false,errs:[],warn:[]};
+ let pts=[];
+ if(M.mode==='coord'){
+  for(let i=0;i<n;i++){const p=P[i];if(!isN(p.x)||!isN(p.y)){R.errs.push(`Point ${i+1} (${p.nom}) : coordonnées incomplètes.`);continue}pts.push({nom:p.nom,x:+p.x,y:+p.y})}
+  if(R.errs.length)return R;
+ }else{
+  const x0=isN(M.x0)?+M.x0:0,y0=isN(M.y0)?+M.y0:0;let dx=[],dy=[],L=[];
+  for(let i=0;i<n;i++){const p=P[i];if(!isN(p.g)||!isN(p.d)||+p.d<=0){R.errs.push(`Point ${i+1} (${p.nom}) : gisement ou distance manquants.`);continue}
+   const g=fromUnit(+p.g,u)/R2D;dx.push(+p.d*Math.sin(g));dy.push(+p.d*Math.cos(g));L.push(+p.d)}
+  if(R.errs.length)return R;
+  const fx=dx.reduce((a,b)=>a+b,0),fy=dy.reduce((a,b)=>a+b,0),per=L.reduce((a,b)=>a+b,0),fm=Math.hypot(fx,fy);
+  R.ferm={fx,fy,fm,per,prec:fm>0?per/fm:Infinity,tol:isN(M.tolFerm)&&+M.tolFerm>0?+M.tolFerm:2000};
+  R.ferm.ok=R.ferm.prec>=R.ferm.tol;
+  let x=x0,y=y0;pts.push({nom:P[0].nom,x,y});
+  for(let i=0;i<n-1;i++){x+=dx[i]-fx*L[i]/per;y+=dy[i]-fy*L[i]/per;pts.push({nom:P[i+1].nom,x,y})}
+  R.brut=null;
+ }
+ // aire signée
+ let A2=0;for(let i=0;i<n;i++){const a=pts[i],b=pts[(i+1)%n];A2+=a.x*b.y-b.x*a.y}
+ const ccw=A2>0;R.sens=ccw?'sens inverse des aiguilles d\'une montre':'sens des aiguilles d\'une montre';
+ const area=Math.abs(A2)/2;R.area=area;
+ if(area<1e-9){R.errs.push('Surface nulle : points alignés ou confondus, ou contour croisé (vérifiez l\'ordre des points).');return R}
+ // périmètre, côtés
+ R.sides=[];let per=0;
+ for(let i=0;i<n;i++){const a=pts[i],b=pts[(i+1)%n];const dx=b.x-a.x,dy=b.y-a.y,d=Math.hypot(dx,dy);let g=Math.atan2(dx,dy)*R2D;if(g<0)g+=360;R.sides.push({a:a.nom,b:b.nom,d,g:toUnit(g,u),gdeg:g,lim:P[i].lim});per+=d;if(d<0.01)R.warn.push(`Côté ${a.nom}-${b.nom} : longueur quasi nulle (points confondus ?).`)}
+ R.per=per;
+ // angles intérieurs
+ R.angles=[];let sum=0;
+ for(let i=0;i<n;i++){const p=pts[i],nx=pts[(i+1)%n],pv=pts[(i-1+n)%n];const v1={x:nx.x-p.x,y:nx.y-p.y},v2={x:pv.x-p.x,y:pv.y-p.y};
+  const cr=v1.x*v2.y-v1.y*v2.x,dt=v1.x*v2.x+v1.y*v2.y;let a=ccw?Math.atan2(cr,dt):Math.atan2(-cr,dt);if(a<0)a+=2*Math.PI;const dg=a*R2D;R.angles.push({nom:p.nom,deg:dg,v:toUnit(dg,u)});sum+=dg}
+ R.angSum=sum;R.angTheo=(n-2)*180;
+ // centre de gravité
+ let cx=0,cy=0;for(let i=0;i<n;i++){const a=pts[i],b=pts[(i+1)%n],f=a.x*b.y-b.x*a.y;cx+=(a.x+b.x)*f;cy+=(a.y+b.y)*f}
+ R.cx=cx/(3*A2);R.cy=cy/(3*A2);
+ // auto-intersection
+ let cross=false;for(let i=0;i<n&&!cross;i++)for(let j=i+1;j<n;j++){if(j===i+1||(i===0&&j===n-1))continue;if(segInter(pts[i],pts[(i+1)%n],pts[j],pts[(j+1)%n])){cross=true;break}}
+ R.cross=cross;if(cross)R.warn.push('Le contour se croise : vérifiez l\'ordre des points. La surface calculée n\'est pas fiable.');
+ const nm=pts.map(p=>p.nom);if(new Set(nm).size!==nm.length)R.warn.push('Deux points portent le même nom.');
+ R.pts=pts;R.n=n;
+ const xs=pts.map(p=>p.x),ys=pts.map(p=>p.y);R.bb={x0:Math.min(...xs),x1:Math.max(...xs),y0:Math.min(...ys),y1:Math.max(...ys)};
+ // surface titre
+ const st=isN(S.parcelle.surfTitre)&&+S.parcelle.surfTitre>0?+S.parcelle.surfTitre:NaN;
+ if(isFinite(st)){R.st=st;R.ecart=area-st;R.ecartPct=(area-st)/st*100;const tol=isN(S.parcelle.tolSurf)?+S.parcelle.tolSurf:2;R.tol=tol;R.ecartHors=Math.abs(R.ecartPct)>tol}
+ R.ok=true;return R;
+}
+const ha=a=>{const h=Math.floor(a/10000),r=a-h*10000,ca=Math.floor(r/100),m2=r-ca*100;return `${h} ha ${ca} a ${fmt(m2,2)} ca`};
+function niceScale(extent_m,mm){const raw=extent_m*1000/mm;const c=[50,100,200,250,500,1000,1500,2000,2500,5000,10000,20000];return c.find(x=>x>=raw)||Math.ceil(raw/1000)*1000}
+function niceBar(m){const c=[1,2,5,10,20,25,50,100,200,500,1000];return c.find(x=>x>=m)||m}
+
+function planSvg(R,S){
+ const W=680,H=520,mg=60,bb=R.bb;const w=bb.x1-bb.x0||1,h=bb.y1-bb.y0||1;const k=Math.min((W-2*mg)/w,(H-2*mg-30)/h);
+ const ox=(W-w*k)/2,oy=(H-30-h*k)/2;const X=x=>ox+(x-bb.x0)*k,Y=y=>oy+(bb.y1-y)*k;
+ const pts=R.pts;let s=`<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Plan de la parcelle">`;
+ s+=`<polygon points="${pts.map(p=>X(p.x).toFixed(1)+','+Y(p.y).toFixed(1)).join(' ')}" fill="#f3e9d8" stroke="#111" stroke-width="1.6"/>`;
+ R.sides.forEach((sd,i)=>{const a=pts[i],b=pts[(i+1)%R.n];const mx=(X(a.x)+X(b.x))/2,my=(Y(a.y)+Y(b.y))/2;let ang=Math.atan2(Y(b.y)-Y(a.y),X(b.x)-X(a.x))*R2D;if(ang>90)ang-=180;if(ang<-90)ang+=180;
+  // décaler le texte vers l'extérieur
+  const dx=X(b.x)-X(a.x),dy=Y(b.y)-Y(a.y),l=Math.hypot(dx,dy)||1;let nx=dy/l,ny=-dx/l;const gx=X(R.cx),gy=Y(R.cy);if((mx+nx-gx)**2+(my+ny-gy)**2<(mx-nx-gx)**2+(my-ny-gy)**2){nx=-nx;ny=-ny}
+  s+=`<text x="${(mx+nx*11).toFixed(1)}" y="${(my+ny*11).toFixed(1)}" font-size="11" text-anchor="middle" dominant-baseline="middle" transform="rotate(${ang.toFixed(1)} ${(mx+nx*11).toFixed(1)} ${(my+ny*11).toFixed(1)})" fill="#111">${fmt(sd.d,2)} m</text>`});
+ pts.forEach((p,i)=>{const px=X(p.x),py=Y(p.y);const pt=S.points[i];const sq=pt.borne.startsWith('Borne');
+  s+=sq?`<rect x="${px-4.5}" y="${py-4.5}" width="9" height="9" fill="#111"/>`:`<circle cx="${px}" cy="${py}" r="4" fill="${pt.borne==='Non matérialisé'?'#fff':'#111'}" stroke="#111" stroke-width="1.5"/>`;
+  const gx=X(R.cx),gy=Y(R.cy);let vx=px-gx,vy=py-gy;const vl=Math.hypot(vx,vy)||1;vx/=vl;vy/=vl;
+  s+=`<text x="${(px+vx*18).toFixed(1)}" y="${(py+vy*18).toFixed(1)}" font-size="14" font-weight="700" text-anchor="middle" dominant-baseline="middle" fill="#111">${esc(p.nom)}</text>`});
+ s+=`<text x="${X(R.cx).toFixed(1)}" y="${Y(R.cy).toFixed(1)}" font-size="13" text-anchor="middle" fill="#111">S = ${fmt(R.area,2)} m²</text>`;
+ // flèche nord
+ s+=`<g transform="translate(${W-40},46)"><line x1="0" y1="26" x2="0" y2="-18" stroke="#111" stroke-width="2"/><polygon points="0,-24 -7,-8 7,-8" fill="#111"/><text x="0" y="42" font-size="14" font-weight="700" text-anchor="middle">N</text></g>`;
+ // échelle
+ const printMm=170*(w*k)/W;const sc=niceScale(w,Math.max(printMm,20));R.scale=sc;
+ const bar=niceBar(w/4);const bw=bar*k;
+ s+=`<g transform="translate(${mg},${H-24})"><rect x="0" y="-5" width="${bw/2}" height="6" fill="#111"/><rect x="${bw/2}" y="-5" width="${bw/2}" height="6" fill="#fff" stroke="#111"/><text x="0" y="-9" font-size="11">0</text><text x="${bw}" y="-9" font-size="11" text-anchor="middle">${bar} m</text><text x="${bw+14}" y="2" font-size="11">Échelle indicative 1/${fmt(sc)} (impression A4 pleine largeur)</text></g>`;
+ s+=`<text x="12" y="16" font-size="11" fill="#444">■ borne  ● piquet ou repère  ○ non matérialisé</text>`;
+ return s+'</svg>';
+}
+
+function compute(){
+ const R=calc(S);window.__R=R;
+ const rm=$('res-mes');
+ if(rm){let h='';
+  if(R.errs&&R.errs.length)h=R.errs.slice(0,4).map(e=>`<div class="alert warn">${esc(e)}</div>`).join('');
+  else if(R.ok){
+   if(R.ferm)h+=`<div class="alert ${R.ferm.ok?'ok':'bad'}">Fermeture du cheminement : erreur de ${fmt(R.ferm.fm*100,1)} cm sur ${fmt(R.ferm.per,2)} m, soit une précision de 1/${isFinite(R.ferm.prec)?fmt(R.ferm.prec,0):'∞'}. ${R.ferm.ok?'Conforme à votre exigence de 1/'+fmt(R.ferm.tol)+'.':'Insuffisante au regard de votre exigence de 1/'+fmt(R.ferm.tol)+' : reprenez les mesures. L\'erreur a été répartie proportionnellement aux longueurs (compensation).'}</div>`;
+   h+=R.warn.map(e=>`<div class="alert warn">${esc(e)}</div>`).join('');
+   h+=`<div class="res"><span class="big">${fmt(R.area,2)} m²</span>${esc(ha(R.area))} · périmètre ${fmt(R.per,2)} m · ${R.n} points${R.ecartPct!=null?`<br>Écart avec le document : ${R.ecart>=0?'+':''}${fmt(R.ecart,2)} m² (${R.ecartPct>=0?'+':''}${fmt(R.ecartPct,2)} %)`:''}</div>`;
+   if(R.ecartHors)h+=`<div class="alert warn">L'écart dépasse ${fmt(R.tol,1)} %. Expliquez-le dans les observations ou faites vérifier par un géomètre-expert agréé.</div>`;
+   h+=`<div class="sc"><table class="t"><tr><th>Côté</th><th class="n">Longueur (m)</th><th class="n">Gisement (${S.mesure.unite==='gon'?'gon':'°'})</th></tr>${R.sides.map(s=>`<tr><td>${esc(s.a)}-${esc(s.b)}</td><td class="n">${fmt(s.d,2)}</td><td class="n">${fmt(s.g,S.mesure.unite==='gon'?3:3)}</td></tr>`).join('')}</table></div>`;
+  }
+  rm.innerHTML=h;}
+ const rp=$('report');if(rp)rp.innerHTML=buildReport(S,R);
+ const done={dossier:!!S.dossier.client&&!!S.dossier.operateur,mesure:!!R.ok,rapport:!!R.ok};
+ document.querySelectorAll('#nav button').forEach(b=>b.classList.toggle('done',!!done[b.dataset.s]));
+}
+
+function buildReport(S,R){
+ const d=S.dossier,pc=S.parcelle,M=S.mesure,u=M.unite==='gon'?'gon':'°';
+ const nr=v=>v===''||v==null?'<i>non renseigné</i>':esc(v);
+ let h=`<div class="cover"><div class="small">${esc(d.ref)}</div><h1>RAPPORT DE LEVÉ ET DE RECONNAISSANCE DES LIMITES</h1><div class="sub"><b>Document de calcul et de mise en forme, non opposable</b></div><div class="sub">${nr(pc.designation)} · ${nr(pc.quartier)}, ${esc(pc.ville)}</div>
+ <table style="margin-top:14px"><tr><th>Demandeur</th><td>${nr(d.client)}</td><th>Objet</th><td>${esc(d.objet)}</td></tr><tr><th>Établi par</th><td>${nr(d.operateur)}${d.qualite?', '+esc(d.qualite):''}</td><th>Date du levé</th><td>${dFr(d.dateLeve)}</td></tr><tr><th>Lieu et date du rapport</th><td>${esc(d.lieu)}, le ${dFr(d.dateRapport)}</td><th>Surface calculée</th><td>${R.ok?fmt(R.area,2)+' m²':'—'}</td></tr></table></div>`;
+ if(!R.ok){return h+`<h2 class="rs">Dossier incomplet</h2><p>${(R.errs&&R.errs.length)?R.errs.map(esc).join('<br>'):'Renseignez les points de la limite.'}</p>`}
+ h+=`<h2 class="rs">1. Objet et résultat</h2><div class="concl">Superficie de la parcelle calculée<span class="v">${fmt(R.area,2)} m²</span><i>${esc(ha(R.area))}</i><br>Périmètre : ${fmt(R.per,2)} m · ${R.n} points${R.ecartPct!=null?`<br>Surface indiquée au document : ${fmt(R.st,2)} m² · écart ${R.ecart>=0?'+':''}${fmt(R.ecart,2)} m² (${R.ecartPct>=0?'+':''}${fmt(R.ecartPct,2)} %)`:''}</div>`;
+ if(R.ecartHors)h+=`<div class="warnb"><b>Écart de surface à expliquer.</b> L'écart avec la surface du document dépasse ${fmt(R.tol,1)} % (seuil fixé par l'auteur). Il peut venir d'une erreur de mesure, d'un empiètement, d'une erreur du document ou d'un changement de limites. Faites vérifier par un géomètre-expert agréé avant toute décision.</div>`;
+ if(R.ferm)h+=`<div class="${R.ferm.ok?'':'warnb'}"><b>Fermeture du cheminement :</b> erreur de ${fmt(R.ferm.fm*100,1)} cm sur ${fmt(R.ferm.per,2)} m (1/${isFinite(R.ferm.prec)?fmt(R.ferm.prec,0):'∞'}). ${R.ferm.ok?'Exigence fixée par l\'auteur (1/'+fmt(R.ferm.tol)+') respectée.':'<b>Exigence fixée par l\'auteur (1/'+fmt(R.ferm.tol)+') non respectée : les mesures doivent être reprises.</b>'} Erreur répartie proportionnellement aux longueurs.</div>`;
+ R.warn.forEach(w=>h+=`<div class="warnb">${esc(w)}</div>`);
+ h+=`<h2 class="rs">2. Identification de la parcelle</h2><table><tr><th>Désignation</th><td>${nr(pc.designation)}</td><th>Localisation</th><td>${nr(pc.quartier)}, ${esc(pc.ville)}</td></tr><tr><th>Document de propriété</th><td>${esc(pc.titreType)}${pc.titre?' n° '+esc(pc.titre):''}</td><th>Titulaire indiqué</th><td>${nr(pc.titulaire)}</td></tr></table>${pc.obs?`<p><b>Observations.</b> ${esc(pc.obs)}</p>`:''}<p class="small">Le document de propriété n'a pas été vérifié par l'auteur de ce rapport. Seul un notaire peut en contrôler la régularité.</p>`;
+ h+=`<h2 class="rs">3. Méthode et matériel</h2><table><tr><th>Mode de saisie</th><td>${M.mode==='coord'?'Coordonnées des points':'Cheminement (gisements et distances) avec compensation proportionnelle aux longueurs'}</td><th>Système</th><td>${nr(M.systeme)}</td></tr><tr><th>Instrument</th><td>${nr(M.instrument)}</td><th>Précision annoncée</th><td>${nr(M.precision)}</td></tr><tr><th>Méthode de levé</th><td colspan="3">${nr(M.methode)}</td></tr></table><p class="small">Superficie calculée par la formule de Gauss (somme des produits croisés des coordonnées). Gisements comptés depuis le nord dans le sens des aiguilles d'une montre, en ${M.unite==='gon'?'grades (gon)':'degrés décimaux'}. Les valeurs sont celles saisies par l'auteur ; l'outil n'a pas vérifié les mesures sur le terrain.</p>`;
+ h+=`<h2 class="rs">4. Coordonnées des points</h2><table><tr><th>Point</th><th class="n">X (m)</th><th class="n">Y (m)</th><th>Borne</th><th>État</th></tr>${R.pts.map((p,i)=>`<tr><td>${esc(p.nom)}</td><td class="n">${fmt(p.x,3)}</td><td class="n">${fmt(p.y,3)}</td><td>${esc(S.points[i].borne)}</td><td>${esc(S.points[i].etat)}</td></tr>`).join('')}</table>`;
+ h+=`<h2 class="rs">5. Côtés, gisements et angles</h2><table><tr><th>Côté</th><th class="n">Longueur (m)</th><th class="n">Gisement (${u})</th><th>Limitrophe</th></tr>${R.sides.map(s=>`<tr><td>${esc(s.a)}-${esc(s.b)}</td><td class="n">${fmt(s.d,2)}</td><td class="n">${fmt(s.g,3)}</td><td>${s.lim?esc(s.lim):'<i>non renseigné</i>'}</td></tr>`).join('')}<tr><th>Périmètre</th><th class="n">${fmt(R.per,2)}</th><th></th><th></th></tr></table>
+ <table><tr><th>Sommet</th>${R.angles.map(a=>`<th class="n">${esc(a.nom)}</th>`).join('')}</tr><tr><td>Angle intérieur (${u})</td>${R.angles.map(a=>`<td class="n">${fmt(a.v,3)}</td>`).join('')}</tr></table><p class="small">Somme des angles : ${fmt(R.angSum,3)}° (théorique ${fmt(R.angTheo,0)}°, contour parcouru dans le ${esc(R.sens)}).</p>`;
+ h+=`<h2 class="rs">6. Superficie</h2><table><tr><th>Surface calculée</th><td class="n">${fmt(R.area,2)} m²</td><td class="n">${fmt(R.area/100,4)} a</td><td class="n">${fmt(R.area/10000,6)} ha</td></tr>${R.st!=null?`<tr><th>Surface du document</th><td class="n">${fmt(R.st,2)} m²</td><td colspan="2">Écart ${R.ecart>=0?'+':''}${fmt(R.ecart,2)} m² (${R.ecartPct>=0?'+':''}${fmt(R.ecartPct,2)} %)</td></tr>`:''}<tr><th>Centre de gravité</th><td colspan="3">X = ${fmt(R.cx,3)} m ; Y = ${fmt(R.cy,3)} m</td></tr></table>`;
+ h+=`<h2 class="rs">7. Plan de la parcelle</h2>${planSvg(R,S)}<p class="small">Plan schématique établi à partir des coordonnées ci-dessus. Les longueurs sont celles des côtés calculés. Ce plan n'est pas un plan de bornage ni un plan cadastral.</p>`;
+ // PV
+ const pv=S.pv;const voisins=[...new Set(R.sides.map(s=>(s.lim||'').trim()).filter(Boolean))];
+ h+=`<div class="pv"><h2 class="rs" style="margin-top:0">8. Procès-verbal de reconnaissance des limites</h2><p>Les soussignés se sont réunis à ${nr(pv.lieuPv)} le ${dFr(pv.datePv)} pour reconnaître les limites de la parcelle ${nr(pc.designation)} (${nr(pc.quartier)}, ${esc(pc.ville)}), telles que décrites dans ce rapport (points ${R.pts.map(p=>esc(p.nom)).join(', ')}).</p><p><b>Personnes présentes :</b> ${pv.present?esc(pv.present):'<i>non renseigné</i>'}</p><p><b>Bornes :</b> ${R.pts.map((p,i)=>esc(p.nom)+' ('+esc(S.points[i].borne.toLowerCase())+', '+esc(S.points[i].etat.toLowerCase())+')').join(' ; ')}.</p><p><b>Observations et réserves :</b> ${pv.obs?esc(pv.obs):'aucune.'}</p>
+ <table><tr><th style="width:30%">Nom et qualité</th><th>Côtés concernés</th><th>Accord ou réserve</th><th style="width:28%">Signature</th></tr>
+ <tr><td class="sigcell">Demandeur : ${nr(d.client)}</td><td>Toute la limite</td><td></td><td></td></tr>
+ ${voisins.map(v=>`<tr><td class="sigcell">Voisin : ${esc(v)}</td><td>${R.sides.filter(s=>(s.lim||'').trim()===v).map(s=>esc(s.a)+'-'+esc(s.b)).join(', ')}</td><td></td><td></td></tr>`).join('')}
+ <tr><td class="sigcell">Voisin : ………………………</td><td></td><td></td><td></td></tr><tr><td class="sigcell">Témoin : ………………………</td><td></td><td></td><td></td></tr>
+ <tr><td class="sigcell">Auteur du levé : ${nr(d.operateur)}</td><td></td><td></td><td></td></tr></table>
+ <p class="small">Ce procès-verbal constate l'accord ou les réserves des personnes présentes. Il n'a pas la valeur d'un bornage ou d'un plan établis par un géomètre-expert agréé et ne peut pas, à lui seul, servir à l'inscription d'un droit au livre foncier.</p></div>`;
+ h+=`<h2 class="rs">9. Conditions limitatives et déclarations</h2><ul>
+ <li><b>Nature du document.</b> Rapport de calcul et de mise en forme à partir de mesures fournies par son auteur. Ce n'est pas un levé, un plan ou un bornage établi par un géomètre-expert agréé. Pour un plan opposable, un bornage officiel, une division ou une mutation, faites intervenir un géomètre-expert agréé.</li>
+ <li><b>Mesures.</b> L'outil calcule à partir des valeurs saisies ; il ne contrôle ni l'instrument ni la qualité des observations. Les erreurs de saisie ou de terrain se retrouvent dans les résultats.</li>
+ <li><b>Titre.</b> Le droit de propriété n'a pas été vérifié. La concordance de la surface avec le document est une indication, pas une preuve.</li>
+ <li><b>Indépendance.</b> ${d.interet==='Aucun'?'L\'auteur déclare n\'avoir aucun intérêt dans la parcelle ni dans l\'opération.':'Intérêt déclaré : '+(esc(d.interetTexte)||'non précisé')+'.'}</li>
+ <li><b>Usage.</b> Ce rapport est réservé au demandeur et à l'objet indiqués.</li></ul>
+ <table><tr><td class="sigcell" style="width:50%">L'auteur<br>${nr(d.operateur)}${d.qualite?'<br>'+esc(d.qualite):''}<br>Signature</td><td>Fait à ${esc(d.lieu)}, le ${dFr(d.dateRapport)}</td></tr></table>
+ <p class="small">Rapport généré par l'outil Rapport de levé et de bornage de Terrimoine (terrimoine.com). Terrimoine est exploité par GKIMMO, qui propose aussi des services payants facultatifs.</p>`;
+ return h;
+}
+build();go((location.hash||'#dossier').slice(1));
+window.addEventListener('hashchange',()=>go(location.hash.slice(1)));
+</script>
+</body>
+</html>
